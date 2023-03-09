@@ -1,0 +1,6 @@
+ #<--start of Raspcapture crons
+# capture after every hour
+0 */1 * * * python /home/pi/Raspcapture/capture.py
+# send after every 4 hours
+0 */4 * * * python /home/pi/Raspcapture/client.py
+#<--end of Raspcapture crons
