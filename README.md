@@ -6,6 +6,18 @@ them to the server.
 Parameter capture is in charge of capturing temperature, humidity , carbondioxide and 
 weight parameters and sending them to the server.
 
+SETTING UP FOR PARAMETER CAPTURE
+
+cd parameter_capture
+
 git clone https://github.com/adafruit/Adafruit_Python_DHT.git
 
-https://github.com/adafruit/Adafruit_Python_DHT
+cd Adafruit_Python_DHT/
+
+sudo python3 setup.py install
+
+DONE...For more inquiries visit https://github.com/adafruit/Adafruit_Python_DHT
+
+
+
+
