@@ -13,6 +13,7 @@ server_address = ""
 image_url = "/var/www/html/ademnea_website/public/arriving_hive_media/"
 audio_url = "/var/www/html/ademnea_website/public/arriving_hive_media/"
 video_url =  "/var/www/html/ademnea_website/public/arriving_hive_media/"
+remote_folder = "/var/www/html/ademnea_website/public/arriving_hive_media/"
 logitude = ""
 latitude = ""
 TRANS_LIMIT = 100

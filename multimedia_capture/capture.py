@@ -3,7 +3,7 @@ from hashlib import md5
 import sqlite3
 import time
 import config
-import device_capture
+import device_capture_config
 #import Adafruit_DHT
 import sqlite3
 import datetime 
@@ -22,7 +22,7 @@ audio_dir = config.base_dir+"/multimedia/audios/"
 image_dir = config.base_dir+"/multimedia/images/"
 hivein_dir = config.base_dir+"/mulitmedia/hivein/"
 airquality_dir= config.base_dir+"/multimedia/airquality/"
-database_path = config.base_dir+"/multimedia/database.sqlite"
+# database_path = config.base_dir+"/multimedia/database.sqlite"
 
 
 def recursive_mkdir(given_path):
@@ -39,12 +39,12 @@ def recursive_mkdir(given_path):
                 mkdir(given_path)
 
 
-class Capture(device_capture.Capture):
+class Capture(device_capture_config.Capture):
     def __init__(self):
         super().__init__()
         self.files = []
-        last_slash = database_path.rindex('/')
-        database_directory = database_path[0:last_slash]
+        # last_slash = database_path.rindex('/')
+        # database_directory = database_path[0:last_slash]
 
         # check if directories exist and if not create them
         if not path.isdir(video_dir):
@@ -56,11 +56,11 @@ class Capture(device_capture.Capture):
        
         if not path.isdir(airquality_dir):
             recursive_mkdir(airquality_dir)
-        if not path.isdir(database_directory):
-            recursive_mkdir(database_directory)
+        # if not path.isdir(database_directory):
+        #     recursive_mkdir(database_directory)
 
-        last_slash = database_path.rindex('/')
-        database_directory = database_path[0:last_slash]
+        # last_slash = database_path.rindex('/')
+        # database_directory = database_path[0:last_slash]
 
         # check if directories exist and if not create them
         if not path.isdir(video_dir):
@@ -72,39 +72,39 @@ class Capture(device_capture.Capture):
      
         if not path.isdir(airquality_dir):
             recursive_mkdir(airquality_dir)
-        if not path.isdir(database_directory):
-            recursive_mkdir(database_directory)
+        # if not path.isdir(database_directory):
+        #     recursive_mkdir(database_directory)
 
-        conn = sqlite3.connect(database_path)
-        cursor = conn.cursor()
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        if cursor.fetchall().__str__().find('file') == -1:
-            conn.execute('''create table file(
-                            id integer primary key autoincrement not null,
-                            file_name text unique not null,
-                            file_path text not null ,
-                            file_type text not null ,
-                            hash_value text not null ,
-                            transferred integer not null default 0
-                        );''')
-            conn.commit()
-        conn.close()
+        # conn = sqlite3.connect(database_path)
+        # cursor = conn.cursor()
+        # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        # if cursor.fetchall().__str__().find('file') == -1:
+        #     conn.execute('''create table file(
+        #                     id integer primary key autoincrement not null,
+        #                     file_name text unique not null,
+        #                     file_path text not null ,
+        #                     file_type text not null ,
+        #                     hash_value text not null ,
+        #                     transferred integer not null default 0
+        #                 );''')
+        #     conn.commit()
+        # conn.close()
 
-    def save_to_db(self):
-        start_time = time.time()
-        # wait for video to save
-        while int(time.time() - start_time) < 5:
-            pass
-        conn = sqlite3.connect(database_path)
-        for file in self.files:
-            try:
-                conn.execute("insert into file (file_name, file_path, file_type, hash_value) values (?,?,?,?)",
-                             (path.basename(file[0]), file[0], file[1], md5(open(file[0], 'rb').read()).hexdigest()))
-                conn.commit()
-            except sqlite3.IntegrityError:
-                continue
-        self.files = []
-        conn.close()
+    # def save_to_db(self):
+    #     start_time = time.time()
+    #     # wait for video to save
+    #     while int(time.time() - start_time) < 5:
+    #         pass
+    #     conn = sqlite3.connect(database_path)
+    #     for file in self.files:
+    #         try:
+    #             conn.execute("insert into file (file_name, file_path, file_type, hash_value) values (?,?,?,?)",
+    #                          (path.basename(file[0]), file[0], file[1], md5(open(file[0], 'rb').read()).hexdigest()))
+    #             conn.commit()
+    #         except sqlite3.IntegrityError:
+    #             continue
+    #     self.files = []
+    #     conn.close()
 
 
 if __name__ == "__main__":
@@ -151,7 +151,7 @@ if __name__ == "__main__":
 
     ##time , date and database connection setup
 e = datetime.now()
-cur = sqlite3.connect(database_path)
+# cur = sqlite3.connect(database_path)
 #unix= time.time()
 #date = str(datetime.datetime.fromtimestamp(unix).strftime('%Y-%m-%d %H:%M:%S'))
 # date= e.strftime("%Y-%m-%d %H:%M:%S")

@@ -12,7 +12,7 @@ import subprocess
 video_dir = config.base_dir+"multimedia/videos/"
 audio_dir = config.base_dir+"multimedia/audios/"
 image_dir = config.base_dir+"/multimedia/images/"
-database_path = config.base_dir+"/multimedia/database.sqlite"
+# database_path = config.base_dir+"/multimedia/database.sqlite"
 
 timeString = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 #print(timeString)
@@ -42,7 +42,7 @@ class Capture:
 
         # convert vid from h264 to mp4
         self.files.append([self.change_format(vid_path), "video"])
-        self.save_to_db()
+        # self.save_to_db()
 
     def record_audio(self, record_seconds=10):
         chunk = 1024
@@ -76,7 +76,7 @@ class Capture:
         wf.writeframes(b''.join(frames))
         wf.close()
         self.files.append([self.change_format(aud_path), "audio"])
-        self.save_to_db()
+       # self.save_to_db()
 
 
     def snap(self, num=1):
@@ -99,8 +99,8 @@ class Capture:
             # img_path = image_dir + 'img' + uuid.uuid4().__str__() + '.jpg'
             #self.camera.capture(img_path)
             self.files.append([self.change_format(img_path), "image"])
-            self.save_to_db()
+           # self.save_to_db()
     
 
-    def save_to_db(self):
-        pass
+    # def save_to_db(self):
+    #     pass

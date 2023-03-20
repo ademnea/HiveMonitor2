@@ -115,24 +115,32 @@ while True:
     
     print("MEASURING TEMPERATURE AND HUMIDITY") #incase of any error , temp and humidity will default to 2
 
+    print()
+
     try:
-        humidity1, temperature1 = Adafruit_DHT.read_retry(11,0)
-
-        print ('TempHoney: {0:0.1f} C  HumidityHoney: {1:0.1f} %'.format(temperature1, humidity1))
-
-        humidity2, temperature2 = Adafruit_DHT.read_retry(11,6)
-
-        print ('TempBrood: {0:0.1f} C  HumidityBrood: {1:0.1f} %'.format(temperature2, humidity2))
-    #     
-        humidity3, temperature3 = Adafruit_DHT.read_retry(11,12)
-
-        print ('TempClimate: {0:0.1f} C  HumidityClimate: {1:0.1f} %'.format(temperature3, humidity3))
-        print()
-            
+        humidity1, temperature1 = Adafruit_DHT.read_retry(11,4)
     except:
-        temperature1, temperature2, temperature3, humidity1, humidity2, humidity3,  = 2, 2, 2, 2, 2, 2
-        print("Error with temperature and humidity sensor : temperature  = 2, humidity = 2")
-        print()
+        print("Error with honey temperature and humidity sensor")
+        temperature1,  humidity1,   = 2, 2
+    print ('TempHoney: {0:0.1f} C  HumidityHoney: {1:0.1f} %'.format(temperature1, humidity1))
+
+    try:
+        humidity2, temperature2 = Adafruit_DHT.read_retry(11,6)
+    except:
+        print("Error with brood temperature and humidity sensor")
+        temperature2,  humidity2,   = 2, 2
+    print ('TempBrood: {0:0.1f} C  HumidityBrood: {1:0.1f} %'.format(temperature2, humidity2))
+         
+    try: 
+        humidity3, temperature3 = Adafruit_DHT.read_retry(11,12)
+    except:
+        print("Error with climate temperature and humidity sensor ")
+        temperature3,  humidity3,   = 2, 2
+    print ('TempClimate: {0:0.1f} C  HumidityClimate: {1:0.1f} %'.format(temperature3, humidity3))
+
+            
+    print()
+  
     
     #GETTING CARBONDIOXIDE DATA
     print("MEASURING CARBONDIOXIDE") #incase of any error with sensors, temperature = 2
