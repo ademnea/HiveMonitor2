@@ -3,3 +3,4 @@ __pycache__/
 Adafruit_Python_DHT/
 
 
+multimedia_capture/send_files_to_server.py
