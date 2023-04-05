@@ -17,26 +17,23 @@ from sensirion_i2c_scd import Scd4xI2cDevice
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-HIVEID = "2"
+HIVEID = "1"
 filename = HIVEID + ".csv" 
 
 ##time , date and database connection setup
 e = datetime.datetime.now()
 date = e.strftime("%Y-%m-%d %H:%M:%S")
 
-#set the measuring interval of parameters in minutes
-measuring_interval = 15
+#set the measuring interval of parameters in minutes=---------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\=
+measuring_interval = 0.5
 delay = measuring_interval * 60 
 
 
 # Initialize DHT11 sensor objects
-honey_dht11 = adafruit_dht.DHT11(board.D4)
+honey_dht11 = adafruit_dht.DHT11(board.D21)
 brood_dht11 = adafruit_dht.DHT11(board.D5)
 climate_dht11 = adafruit_dht.DHT11(board.D6)
 
-#initialize temperature and humidity to default
-temperature1, temperature2, temperature3 = 2, 2, 2
-humidity1, humidity2, humidity3          = 2, 2, 2
 
 
 
@@ -77,6 +74,10 @@ count = 1
 
 ##data reading loop
 while True:
+
+    #initialize temperature and humidity to default
+    temperature1, temperature2, temperature3 = 2, 2, 2
+    humidity1, humidity2, humidity3          = 2, 2, 2
 
     #get the current time
     current_time = datetime.datetime.now()
@@ -139,7 +140,7 @@ while True:
         temperature2 = brood_dht11.temperature
         humidity2    = brood_dht11.humidity
     except Exception as e:
-        print("Error with honey temperature and humidity sensor:", e)
+        print("Error with brood temperature and humidity sensor:", e)
 
     print("TempBrood: %d C" % temperature2 +' '+"HumidityBrood: %d %%" % humidity2)
 

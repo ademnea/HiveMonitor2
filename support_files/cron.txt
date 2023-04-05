@@ -1,6 +1,10 @@
- #<--start of Raspcapture crons
-# capture after every hour
-0 */1 * * * python /home/pi/Raspcapture/capture.py
-# send after every 4 hours
-0 */4 * * * python /home/pi/Raspcapture/client.py
-#<--end of Raspcapture crons
+#<--start of hivemonitor  crons
+# capture after 50 minutes
+*/50 * * * * python3 /home/pi/Desktop/HiveMonitor2/multimedia_capture/capture.py
+
+# send after every 2 hours
+0 */2 * * * python3 /home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py
+
+# capture parameters every after 15 minutes and send .... this script is started at reboot
+@reboot python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/parameter_capture_and_send.py
+#<--end of crons
