@@ -1,13 +1,14 @@
 import paramiko
 import time
-from Adafruit_Python_DHT  import Adafruit_DHT
-import datetime 
-import sys
+import datetime
 import time
 import os
 import csv
 import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
+import board
+import adafruit_dht
+
 
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
 from sensirion_i2c_scd import Scd4xI2cDevice
@@ -16,20 +17,28 @@ from sensirion_i2c_scd import Scd4xI2cDevice
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-HIVEID = "1"
+HIVEID = "2"
 filename = HIVEID + ".csv" 
 
 ##time , date and database connection setup
 e = datetime.datetime.now()
 date = e.strftime("%Y-%m-%d %H:%M:%S")
-#unix= time.time()
-#date = str(datetime.datetime.fromtimestamp(unix).strftime('%Y-%m-%d %H:%M:%S'))
 
 #set the measuring interval of parameters in minutes
 measuring_interval = 15
 delay = measuring_interval * 60 
-temperature1 = 0
-humidity1 = 0
+
+
+# Initialize DHT11 sensor objects
+honey_dht11 = adafruit_dht.DHT11(board.D4)
+brood_dht11 = adafruit_dht.DHT11(board.D5)
+climate_dht11 = adafruit_dht.DHT11(board.D6)
+
+#initialize temperature and humidity to default
+temperature1, temperature2, temperature3 = 2, 2, 2
+humidity1, humidity2, humidity3          = 2, 2, 2
+
+
 
 
 ## HX711 set up
@@ -62,7 +71,9 @@ humidity1 = 0
 # hx.tare()
 # ##end of HX711 set up
 
-count = 1;
+count = 1
+
+
 
 ##data reading loop
 while True:
@@ -114,31 +125,32 @@ while True:
     #obtaining temperature humidity and temperature    
     
     print("MEASURING TEMPERATURE AND HUMIDITY") #incase of any error , temp and humidity will default to 2
-
     print()
-
-    try:
-        humidity1, temperature1 = Adafruit_DHT.read_retry(11,4)
-    except:
-        print("Error with honey temperature and humidity sensor")
-        temperature1,  humidity1,   = 2, 2
-    print ('TempHoney: {0:0.1f} C  HumidityHoney: {1:0.1f} %'.format(temperature1, humidity1))
-
-    try:
-        humidity2, temperature2 = Adafruit_DHT.read_retry(11,6)
-    except:
-        print("Error with brood temperature and humidity sensor")
-        temperature2,  humidity2,   = 2, 2
-    print ('TempBrood: {0:0.1f} C  HumidityBrood: {1:0.1f} %'.format(temperature2, humidity2))
+        
+    try: 
+        temperature1 = honey_dht11.temperature
+        humidity1    = honey_dht11.humidity
+    except Exception as e:
+        print("Error with honey temperature and humidity sensor:", e)
+        
+    print("TempHoney: %d C" % temperature1 +' '+"HumidityHoney: %d %%" % humidity1)
          
     try: 
-        humidity3, temperature3 = Adafruit_DHT.read_retry(11,12)
-    except:
-        print("Error with climate temperature and humidity sensor ")
-        temperature3,  humidity3,   = 2, 2
-    print ('TempClimate: {0:0.1f} C  HumidityClimate: {1:0.1f} %'.format(temperature3, humidity3))
+        temperature2 = brood_dht11.temperature
+        humidity2    = brood_dht11.humidity
+    except Exception as e:
+        print("Error with honey temperature and humidity sensor:", e)
 
-            
+    print("TempBrood: %d C" % temperature2 +' '+"HumidityBrood: %d %%" % humidity2)
+
+    try: 
+        temperature3 = climate_dht11.temperature
+        humidity3    = climate_dht11.humidity
+    except Exception as e:
+        print("Error with climate temperature and humidity sensor:", e)
+        
+    print("TempClimate: %d C" % temperature3 +' '+"HumidityClimate: %d %%" % humidity3)
+
     print()
   
     
@@ -176,16 +188,15 @@ while True:
     except:
         co2 = "2"
         print("ERROR WITH CARBONDIOXIDE SENSOR....... Carbondioxide =  2")
+        print()
 
         
     #WRITING TO A CSV 
     print("WRITING DATA TO CSV")
     temperature = str(temperature1) + "*" + str(temperature2) + "*" + str(temperature3)
     humidity = str(humidity1) + "*" + str(humidity2) + "*" + str(humidity3)
-    
-   
 
-    
+
     carbondioxide = co2
     weight = str(weight)
     e1 = datetime.datetime.now()
@@ -210,7 +221,7 @@ while True:
     #MAKE CONNECTION TO THE SERVER
     print("ESTABLISHING CONNECTION TO THE SERVER")
     try:
-        ssh.connect('137.63.185.94',username='hivemonitor', password= 'Ad@mnea321')
+        ssh.connect('137.63.185.94',username='hivemonitor', password= '')
         print("Connected successfully")
         sftp = ssh.open_sftp()
     except:
@@ -237,10 +248,10 @@ while True:
 
     print()
     print("Sleeping for " + str(measuring_interval) + " minutes...")
+    count = count + 1
     time.sleep(delay)
 
-    count = count + 1
+   
     print()
     print()
     print()
-#     
