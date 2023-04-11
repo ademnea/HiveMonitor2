@@ -25,7 +25,7 @@ e = datetime.datetime.now()
 date = e.strftime("%Y-%m-%d %H:%M:%S")
 
 #set the measuring interval of parameters in minutes=---------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\=
-measuring_interval = 0.5
+measuring_interval = 15
 delay = measuring_interval * 60 
 
 
