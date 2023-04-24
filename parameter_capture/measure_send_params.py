@@ -2,6 +2,7 @@ import paramiko
 import time
 import datetime
 import time
+import sys
 import os
 import csv
 import RPi.GPIO as GPIO
@@ -10,8 +11,8 @@ import board
 import adafruit_dht
 
 
-from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
-from sensirion_i2c_scd import Scd4xI2cDevice
+# from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
+# from sensirion_i2c_scd import Scd4xI2cDevice
 #import analyse 
 
 ssh = paramiko.SSHClient()
@@ -35,38 +36,39 @@ brood_dht11 = adafruit_dht.DHT11(board.D5)
 climate_dht11 = adafruit_dht.DHT11(board.D6)
 
 
+# initializing weight module
+EMULATE_HX711=False
 
+referenceUnit = 1
 
-
-## HX711 set up
-# EMULATE_HX711=False
-
-# referenceUnit = 1
-
-# if not EMULATE_HX711:
-#     import RPi.GPIO as GPIO
-#     from hx711 import HX711
-# else:
-#     from emulated_hx711 import HX711
-
-# def cleanAndExit():
-#     print("Cleaning...")
-
-#     if not EMULATE_HX711:
-#         GPIO.cleanup()
-        
-#     print("Bye!")
-#     sys.exit()
+if not EMULATE_HX711:
+    import RPi.GPIO as GPIO
+    from hx711 import HX711
     
-# hx = HX711(20,21)
-# hx.set_reading_format("MSB", "MSB")
-# hx.set_format('MSB', 'MSB')
+else:
+    from emulated_hx711 import HX711
+
+def cleanAndExit():
+    print("Cleaning...")
+
+    if not EMULATE_HX711:
+        GPIO.cleanup()
+        
+    print("Bye!")
+    sys.exit()
+
+hx = HX711(2, 3)
+
+hx.set_reading_format("MSB", "MSB")
+
+hx.set_reference_unit(29)
 # hx.set_reference_unit(referenceUnit)
 
-# # hx.reset()
+hx.reset()
 
-# hx.tare()
-# ##end of HX711 set up
+hx.tare()
+
+
 
 count = 1
 
@@ -75,7 +77,9 @@ count = 1
 ##data reading loop
 while True:
 
-    #initialize temperature and humidity to default
+    #initialize parameters to default value (2)
+    weight=2
+    co2 = 2
     temperature1, temperature2, temperature3 = 2, 2, 2
     humidity1, humidity2, humidity3          = 2, 2, 2
 
@@ -89,21 +93,20 @@ while True:
     ##obtaining the weight
     print("MEASURING WEIGHT")
 
-    try: #incase weight sensor has issues , the default weight will be 2kg, this straight line 
-         #on the weight graph will indicate an error for us 
-        # hx.reset()
-        # time.sleep(5)
-        # hx.tare()
-        # time.sleep(5)
-        # sum_weight =  0
-        # for i in range(5): #Setting a mean value for the weight we shall have read 
-        #     sample_weight = 0
-        #     sample_weight = hx.get_weight(7)
-        #     sum_weight= sum_weight + sample_weight
+     #incase weight sensor has issues , the default weight will be 2kg, this straight line 
+     #on the weight graph will indicate an error for us 
+   
+
+    try:
+        val = max(0,int(hx.get_weight(5)))
+        weight=(val/1000)
+
+        hx.power_down()
+        hx.power_up()
         
-        # weight = round(sum_weight/5, 2)##converting the weight to kgs
+        weight = round(weight, 2)##converting the weight to kgs
         
-        #defaulting all temperature values below 40kgs to 40kgs
+        # defaulting all temperature values below 40kgs to 40kgs
         if weight < 40:
             weight = 2
             print("ERROR WITH WEIGHT SENSOR!.......weight = 2kg ")
@@ -157,39 +160,38 @@ while True:
     
     #GETTING CARBONDIOXIDE DATA
     print("MEASURING CARBONDIOXIDE") #incase of any error with sensors, temperature = 2
-    co2 = 0
 
-    try:
-        with LinuxI2cTransceiver('/dev/i2c-1') as i2c_transceiver:
-            i2c_connection = I2cConnection(i2c_transceiver)    
-            scd41 = Scd4xI2cDevice(i2c_connection)
-        #     scd41.set_automatic_self_calibration = True
-        #     scd41.get_automatic_self_calibration
-        #     
+    # try:
+    #     # with LinuxI2cTransceiver('/dev/i2c-1') as i2c_transceiver:
+    #     #     i2c_connection = I2cConnection(i2c_transceiver)    
+    #     #     scd41 = Scd4xI2cDevice(i2c_connection)
+    #     #     scd41.set_automatic_self_calibration = True
+    #     #     scd41.get_automatic_self_calibration
+    #     #     
 
-            # start periodic measurement in high power mode
-            scd41.stop_periodic_measurement()
-            time.sleep(1)
-            scd41.reinit()
-            time.sleep(5)
-            scd41.start_periodic_measurement()
+    #         # start periodic measurement in high power mode
+    #         # scd41.stop_periodic_measurement()
+    #         # time.sleep(1)
+    #         # scd41.reinit()
+    #         # time.sleep(5)
+    #         # scd41.start_periodic_measurement()
         
-            # Measure every 5 seconds
+    #     #     # Measure every 5 seconds
             
-        #     while True:
-            for i in range(0,1):
-                time.sleep(5)
-                co2, temperature, humidity = scd41.read_measurement()
-                print("Carbondioxide : " + "{:d} ppm CO2".format(co2.co2))
-                print()
+    #     # #     while True:
+    #     #     for i in range(0,1):
+    #     #         time.sleep(5)
+    #     #         co2, temperature, humidity = scd41.read_measurement()
+    #     #         print("Carbondioxide : " + "{:d} ppm CO2".format(co2.co2))
+    #     #         print()
 
-            scd41.stop_periodic_measurement()
+    #     #     scd41.stop_periodic_measurement()
 
-        co2 = str(co2).split(" ")[0]
-    except:
-        co2 = "2"
-        print("ERROR WITH CARBONDIOXIDE SENSOR....... Carbondioxide =  2")
-        print()
+    #     # co2 = str(co2).split(" ")[0]
+    # except:
+    #     co2 = "2"
+    #     print("ERROR WITH CARBONDIOXIDE SENSOR....... Carbondioxide =  2")
+    #     print()
 
         
     #WRITING TO A CSV 
