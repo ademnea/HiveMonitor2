@@ -6,5 +6,5 @@
 0 */2 * * * python3 /home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py
 
 # capture parameters every after 15 minutes and send .... this script is started at reboot
-@reboot python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/parameter_capture_and_send.py
+@reboot python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/measure_send_params.py
 #<--end of crons
