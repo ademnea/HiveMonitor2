@@ -20,4 +20,4 @@ DONE...For more inquiries visit https://github.com/adafruit/Adafruit_Python_DHT
 
 
 
-
+sudo pip3 install adafruit-circuitpython-dht
