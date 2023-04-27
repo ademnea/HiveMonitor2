@@ -9,8 +9,10 @@ import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
 import board
 import adafruit_dht
-from multimedia_capture import config
+sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py')
+sys.path.append('/home/pi/Desktop/HiveMonitor2/')
 
+from multimedia_capture.config import node_id
 
 # from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
 # from sensirion_i2c_scd import Scd4xI2cDevice
@@ -19,15 +21,17 @@ from multimedia_capture import config
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-HIVEID = config.node_id
-filename = HIVEID + ".csv"
+# HIVEID = config.node_id
+HIVEID =   str(node_id)
+filename = HIVEID + ".csv" 
+EMPTY_HIVE_WEIGHT = 15
 
 ##time , date and database connection setup
 e = datetime.datetime.now()
 date = e.strftime("%Y-%m-%d %H:%M:%S")
 
 #set the measuring interval of parameters in minutes=---------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\=
-measuring_interval = 15
+measuring_interval = 0.02
 delay = measuring_interval * 60 
 
 
@@ -40,11 +44,11 @@ climate_dht11 = adafruit_dht.DHT11(board.D6)
 # initializing weight module
 EMULATE_HX711=False
 
-referenceUnit = 1
+referenceUnit = -11.8
 
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
-    from hx711 import HX711
+    from hx711py.hx711 import HX711
     
 else:
     from emulated_hx711 import HX711
@@ -62,8 +66,7 @@ hx = HX711(2, 3)
 
 hx.set_reading_format("MSB", "MSB")
 
-hx.set_reference_unit(29)
-# hx.set_reference_unit(referenceUnit)
+hx.set_reference_unit(referenceUnit)
 
 hx.reset()
 
@@ -107,8 +110,8 @@ while True:
         
         weight = round(weight, 2)##converting the weight to kgs
         
-        # defaulting all temperature values below 40kgs to 40kgs
-        if weight < 40:
+        # defaulting all invalid hiveweight values
+        if weight < EMPTY_HIVE_WEIGHT:
             weight = 2
             print("ERROR WITH WEIGHT SENSOR!.......weight = 2kg ")
         elif weight > 250:
@@ -122,9 +125,6 @@ while True:
 
     
     print()
-#     hx.power_down()## put the hx711 to sleep
-
-
     ##end of weight
         
     #obtaining temperature humidity and temperature    
