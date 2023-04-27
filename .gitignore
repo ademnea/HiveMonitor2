@@ -3,6 +3,8 @@ __pycache__/
 Adafruit_Python_DHT/
 
 
-multimedia_capture/send_files_to_server.py
 1.csv
 multimedia_capture/send_files_to_server.py
+parameter_capture/measure_send_params.py
+
+multimedia_capture/config.py
