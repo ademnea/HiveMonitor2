@@ -1,4 +1,4 @@
-import config
+from . import config
 import time
 import pyaudio
 import wave

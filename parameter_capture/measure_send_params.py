@@ -9,6 +9,7 @@ import RPi.GPIO as GPIO
 GPIO.setwarnings(False)
 import board
 import adafruit_dht
+from multimedia_capture import config
 
 
 # from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
@@ -18,8 +19,8 @@ import adafruit_dht
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-HIVEID = "1"
-filename = HIVEID + ".csv" 
+HIVEID = config.node_id
+filename = HIVEID + ".csv"
 
 ##time , date and database connection setup
 e = datetime.datetime.now()
