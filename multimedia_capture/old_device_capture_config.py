@@ -1,18 +1,20 @@
 import config
 import time
+from picamera import PiCamera
 import pyaudio
 import wave
 from subprocess import call
 from datetime import datetime
-import subprocess
-
-# paths
-video_dir = config.base_dir+"multimedia/videos/"
-audio_dir = config.base_dir+"multimedia/audios/"
-image_dir = config.base_dir+"/multimedia/images/"
 
 timeString = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-#print(timeString)
+
+
+# paths
+video_dir = config.base_dir+"/multimedia/videos/"
+audio_dir = config.base_dir+"/multimedia/audios/"
+image_dir = config.base_dir+"/multimedia/images/"
+database_path = config.base_dir+"/multimedia/database.sqlite"
+
 
 class Capture:
     def __init__(self):
@@ -28,22 +30,15 @@ class Capture:
 
         return new_file_path
 
-    def record_video(self, capture_duration=10000):
-        
-        #capture video
+    def record_video(self, capture_duration=10):
+        self.init_camera()
         vid_path = video_dir + str(config.node_id)+  '_' + timeString  +  '.h264'
-        video_result = subprocess.run(["libcamera-vid", "-t",str(capture_duration), "-o", vid_path, "--width", "1280", "--height", "720", "-n"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        # Print the output and errors (if any)
-        print(video_result.stdout.decode("utf-8"))
-        print(video_result.stderr.decode("utf-8"))
-
-        # convert vid from h264 to mp4
+        self.camera.start_recording(vid_path)
+        self.camera.wait_recording(capture_duration)
+        self.camera.stop_recording()
         self.files.append([self.change_format(vid_path), "video"])
-
         vid_path = video_dir + str(config.node_id)+  '_' + timeString  +  '.mp4'
         return vid_path
-       
 
     def record_audio(self, record_seconds=10):
         chunk = 1024
@@ -68,9 +63,7 @@ class Capture:
         stream.stop_stream()
         stream.close()
         p.terminate()
-
         aud_path = audio_dir + str(config.node_id)+  '_' + timeString  +  '.wav'
-
         wf = wave.open(aud_path, 'wb')
         wf.setnchannels(channels)
         wf.setsampwidth(p.get_sample_size(form))
@@ -79,28 +72,17 @@ class Capture:
         wf.close()
         self.files.append([self.change_format(aud_path), "audio"])
         return aud_path
+     
+    def init_camera(self):
+        if self.camera is None:
+            self.camera = PiCamera()
+            self.camera.resolution = (640, 480)
 
     def snap(self, num=1):
-
+        self.init_camera()
         time.sleep(2)
-
         for i in range(num):
-
             img_path = image_dir + str(config.node_id)+  '_' + timeString  +  '.jpg'
-
-            # Run the command and capture the output and errors
-
-            #result = subprocess.run(["libcamera-jpeg", "-o", "/home/pi/Desktop/Intergrated-System/Adafruit_Python_DHT/test2.jpg"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            image_result = subprocess.run(["libcamera-jpeg", "-o", img_path, "--width", "1920", "--height", "1080", "-n"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            
-            # Print the output and errors (if any)
-            print(image_result.stdout.decode("utf-8"))
-            print(image_result.stderr.decode("utf-8"))
-
             self.camera.capture(img_path)
             self.files.append([self.change_format(img_path), "image"])
-
-            return img_path
-         
-    
-
+        return img_path
