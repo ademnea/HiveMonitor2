@@ -21,7 +21,6 @@ from multimedia_capture.config import node_id
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-# HIVEID = config.node_id
 HIVEID =   str(node_id)
 filename = HIVEID + ".csv" 
 EMPTY_HIVE_WEIGHT = 15
@@ -31,7 +30,7 @@ e = datetime.datetime.now()
 date = e.strftime("%Y-%m-%d %H:%M:%S")
 
 #set the measuring interval of parameters in minutes=---------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\=
-measuring_interval = 0.02
+measuring_interval = 15
 delay = measuring_interval * 60 
 
 
@@ -51,7 +50,7 @@ if not EMULATE_HX711:
     from hx711py.hx711 import HX711
     
 else:
-    from emulated_hx711 import HX711
+    from hx711py.emulated_hx711 import HX711
 
 def cleanAndExit():
     print("Cleaning...")
