@@ -1,7 +1,6 @@
 from os import path, mkdir
-from hashlib import md5
 import config
-import old_device_capture_config as device_capture_config
+import device_capture_config as device_capture
 import datetime 
 from datetime import datetime
 
@@ -25,7 +24,7 @@ def recursive_mkdir(given_path):
                 mkdir(given_path)
 
 
-class Capture(device_capture_config.Capture):
+class Capture(device_capture.Capture):
     def __init__(self):
         super().__init__()
         self.files = []

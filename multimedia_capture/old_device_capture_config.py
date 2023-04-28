@@ -1,7 +1,7 @@
 import config
 import time
 from picamera import PiCamera
-from . import config
+import config
 import pyaudio
 import wave
 from subprocess import call
