@@ -21,3 +21,18 @@ DONE...For more inquiries visit https://github.com/adafruit/Adafruit_Python_DHT
 
 
 sudo pip3 install adafruit-circuitpython-dht
+
+
+SETTING UP TIME SYNCHRONIZATION
+
+sudo apt-get update
+sudo apt-get install ntp
+
+sudo nano /etc/ntp.conf
+
+add these lines below;
+server 0.ke.pool.ntp.org
+server 3.africa.pool.ntp.org
+server 2.africa.pool.ntp.org
+
+
