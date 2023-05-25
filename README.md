@@ -8,22 +8,16 @@ weight parameters and sending them to the server.
 
 SETTING UP FOR PARAMETER CAPTURE
 
-cd parameter_capture
+1.sudo pip3 install adafruit-circuitpython-dht
 
-git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+2.sudo pip3 install paramiko
 
-cd Adafruit_Python_DHT/
+3.sudo apt install libgpiod2
 
-sudo python3 setup.py install
+4.https://github.com/tatobari/hx711py.git
 
-DONE...For more inquiries visit https://github.com/adafruit/Adafruit_Python_DHT
-
-
-
-sudo pip3 install adafruit-circuitpython-dht
-
+5. cd into hx711py and run python setup.py install
 
 SETTING UP TIME SYNCHRONIZATION
 
-Go to the main panel > Preferences > Raspberry Pi Configuration > Localization
 
