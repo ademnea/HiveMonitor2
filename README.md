@@ -16,10 +16,12 @@ SETTING UP FOR PARAMETER & MEDIA CAPTURE
 
 4.sudo apt-get install portaudio19-dev
 
-5.Edit this line "import device_capture_config as device_capture" in capture.py 
+5.sudo apt install gpac
+
+6.Edit this line "import device_capture_config as device_capture" in capture.py 
   depending on the pi camera to be used whether old or new.
 
-6.sudo raspi-config > interface options > Legacy camera
+7.sudo raspi-config > interface options > Legacy camera
   Enable for pi camera module v3 , if lower version , disable
   Reboot after this
 
