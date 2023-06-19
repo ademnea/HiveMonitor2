@@ -18,12 +18,26 @@ SETTING UP FOR PARAMETER & MEDIA CAPTURE
 
 5.sudo apt install gpac
 
-6.Edit this line "import device_capture_config as device_capture" in capture.py 
+6.sudo pip3 install sounddevice
+
+7.sudo pip3 install soundfile
+
+8.Edit this line "import device_capture_config as device_capture" in capture.py 
   depending on the pi camera to be used whether old or new.
 
-7.sudo raspi-config > interface options > Legacy camera
+9.sudo raspi-config > interface options > Legacy camera
   Enable for pi camera module v3 , if lower version , disable
-  Reboot after this
+  Reboot after 
+  
+10.crontab -e , copy cronjobs from cron.txt and install them
+
+11.insert credentials in measure_send_params.py and send_files_to_server.py 
+
+12.go to config.py and set the correct node id
+
+
+
+
 
 
 SETTING UP TIME SYNCHRONIZATION

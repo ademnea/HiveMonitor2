@@ -2,10 +2,10 @@ import config
 import time
 from picamera import PiCamera
 import config
-import pyaudio
-import wave
 from subprocess import call
 from datetime import datetime
+import sounddevice as sd
+import soundfile as sf
 
 timeString = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
@@ -42,36 +42,26 @@ class Capture:
         return vid_path
 
     def record_audio(self, record_seconds=10):
-        chunk = 1024
-        form = pyaudio.paInt16
-        channels = 2
-        rate = 44100
+        sample_rate = 44100  # Sample rate (Hz)
+        channels = 2  # Number of audio channels
 
-        p = pyaudio.PyAudio()
+        duration = record_seconds  # Duration of the recording (seconds)
+        frames = int(duration * sample_rate)  # Number of frames
 
-        stream = p.open(format=form,
-                        channels=channels,
-                        rate=rate,
-                        input=True,
-                        frames_per_buffer=chunk)
+        # Start the recording
+        recording = sd.rec(frames, samplerate=sample_rate, channels=channels)
 
-        frames = []
+        # Wait for the recording to complete
+        sd.wait()
 
-        for i in range(0, int(rate / chunk * record_seconds)):
-            data = stream.read(chunk)
-            frames.append(data)
-
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+        # Generate a unique filename based on the current timestamp
         aud_path = audio_dir + str(config.node_id)+  '_' + timeString  +  '.wav'
-        wf = wave.open(aud_path, 'wb')
-        wf.setnchannels(channels)
-        wf.setsampwidth(p.get_sample_size(form))
-        wf.setframerate(rate)
-        wf.writeframes(b''.join(frames))
-        wf.close()
+
+        # Save the recorded audio to a WAV file
+        sf.write(aud_path, recording, sample_rate)
+        
         self.files.append([self.change_format(aud_path), "audio"])
+
         return aud_path
      
     def init_camera(self):
