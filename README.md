@@ -6,7 +6,7 @@ them to the server.
 Parameter capture is in charge of capturing temperature, humidity , carbondioxide and 
 weight parameters and sending them to the server.
 
-SETTING UP FOR PARAMETER CAPTURE
+SETTING UP FOR PARAMETER & MEDIA CAPTURE 
 
 1.sudo pip3 install adafruit-circuitpython-dht
 
@@ -14,9 +14,15 @@ SETTING UP FOR PARAMETER CAPTURE
 
 3.sudo apt install libgpiod2
 
-4.https://github.com/tatobari/hx711py.git
+4.sudo apt-get install portaudio19-dev
 
-5. cd into hx711py and run python setup.py install
+5.Edit this line "import device_capture_config as device_capture" in capture.py 
+  depending on the pi camera to be used whether old or new.
+
+6.sudo raspi-config > interface options > Legacy camera
+  Enable for pi camera module v3 , if lower version , disable
+  Reboot after this
+
 
 SETTING UP TIME SYNCHRONIZATION
 
