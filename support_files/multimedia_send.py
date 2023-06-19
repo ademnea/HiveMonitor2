@@ -4,7 +4,7 @@ import sqlite3
 import  config
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-ssh.connect('137.63.185.94',username='hivemonitor', password= 'Ad@mnea321')
+ssh.connect('137.63.185.94',username='hivemonitor', password= '')
 print("Connected successfully")
 sftp = ssh.open_sftp()
 multimedia_urls = {'audio': config.audio_url,
