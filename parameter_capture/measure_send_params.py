@@ -228,7 +228,7 @@ while True:
     #MAKE CONNECTION TO THE SERVER
     print("ESTABLISHING CONNECTION TO THE SERVER")
     try:
-        ssh.connect('137.63.185.94',username='hivemonitor', password= 'Ad@mnea321')
+        ssh.connect('137.63.185.94',username='hivemonitor', password= '')
         print("Connected successfully")
         sftp = ssh.open_sftp()
     except:
