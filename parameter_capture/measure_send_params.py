@@ -23,7 +23,7 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 HIVEID =   str(node_id)
 filename = HIVEID + ".csv" 
-EMPTY_HIVE_WEIGHT = 15
+EMPTY_HIVE_WEIGHT = 10
 
 ##time , date and database connection setup
 e = datetime.datetime.now()
@@ -43,7 +43,7 @@ climate_dht11 = adafruit_dht.DHT11(board.D6)
 # initializing weight module
 EMULATE_HX711=False
 
-referenceUnit = -11.8
+referenceUnit = -14.975
 
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
@@ -101,13 +101,17 @@ while True:
    
 
     try:
-        val = max(0,int(hx.get_weight(5)))
-        weight=(val/1000)
-
+        average_times=3
+        weight_list=[]
+        for i in range(average_times):
+            val = max(0,int(hx.get_weight(5)))
+            weight=(val/1000)
+            weight_list.append(weight)
+        averaged_weight=(sum(weight_list)/average_times)
+        weight = round(averaged_weight, 0)
         hx.power_down()
         hx.power_up()
         
-        weight = round(weight, 2)##converting the weight to kgs
         
         # defaulting all invalid hiveweight values
         if weight < EMPTY_HIVE_WEIGHT:
@@ -224,7 +228,7 @@ while True:
     #MAKE CONNECTION TO THE SERVER
     print("ESTABLISHING CONNECTION TO THE SERVER")
     try:
-        ssh.connect('137.63.185.94',username='hivemonitor', password= '')
+        ssh.connect('137.63.185.94',username='hivemonitor', password= 'Ad@mnea321')
         print("Connected successfully")
         sftp = ssh.open_sftp()
     except:
