@@ -9,7 +9,7 @@ import subprocess
 # paths
 video_dir = config.base_dir+"multimedia/videos/"
 audio_dir = config.base_dir+"multimedia/audios/"
-image_dir = config.base_dir+"/multimedia/images/"
+image_dir = config.base_dir+"multimedia/images/"
 
 timeString = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 #print(timeString)
@@ -85,7 +85,7 @@ class Capture:
             print(image_result.stdout.decode("utf-8"))
             print(image_result.stderr.decode("utf-8"))
 
-            self.camera.capture(img_path)
+            # self.camera.capture(img_path)
             self.files.append([self.change_format(img_path), "image"])
 
             return img_path
