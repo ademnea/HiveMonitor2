@@ -6,3 +6,4 @@ multimedia_capture/send_files_to_server.py
 parameter_capture/measure_send_params.py
 
 multimedia_capture/config.py
+*.log
