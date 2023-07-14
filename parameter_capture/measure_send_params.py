@@ -80,11 +80,12 @@ count = 1
 ##data reading loop
 while True:
 
-    #initialize parameters to default value (2)
-    weight=2
+    # Initialize parameters to default value (2)
+    weight = 2
     co2 = 2
-    temperature1, temperature2, temperature3 = 2, 2, 2
-    humidity1, humidity2, humidity3          = 2, 2, 2
+    temperature_honey, temperature_brood, temperature_exterior = 2, 2, 2
+    humidity_honey, humidity_brood, humidity_exterior = 2, 2, 2
+
 
     #get the current time
     current_time = datetime.datetime.now()
