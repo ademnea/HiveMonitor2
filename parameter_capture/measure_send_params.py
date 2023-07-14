@@ -136,28 +136,28 @@ while True:
     print()
         
     try: 
-        temperature1 = honey_dht11.temperature
-        humidity1    = honey_dht11.humidity
+        temperature_honey = honey_dht11.temperature
+        humidity_honey = honey_dht11.humidity
     except Exception as e:
         print("Error with honey temperature and humidity sensor:", e)
-        
-    print("TempHoney: %d C" % temperature1 +' '+"HumidityHoney: %d %%" % humidity1)
-         
+    
+    print("Temperature Honey: %d C" % temperature_honey + " Humidity Honey: %d %%" % humidity_honey)
+    
     try: 
-        temperature2 = brood_dht11.temperature
-        humidity2    = brood_dht11.humidity
+        temperature_brood = brood_dht11.temperature
+        humidity_brood = brood_dht11.humidity
     except Exception as e:
         print("Error with brood temperature and humidity sensor:", e)
-
-    print("TempBrood: %d C" % temperature2 +' '+"HumidityBrood: %d %%" % humidity2)
-
+    
+    print("Temperature Brood: %d C" % temperature_brood + " Humidity Brood: %d %%" % humidity_brood)
+    
     try: 
-        temperature3 = climate_dht11.temperature
-        humidity3    = climate_dht11.humidity
+        temperature_exterior = climate_dht11.temperature
+        humidity_exterior = climate_dht11.humidity
     except Exception as e:
-        print("Error with climate temperature and humidity sensor:", e)
-        
-    print("TempClimate: %d C" % temperature3 +' '+"HumidityClimate: %d %%" % humidity3)
+        print("Error with exterior temperature and humidity sensor:", e)
+    
+    print("Temperature Exterior: %d C" % temperature_exterior + " Humidity Exterior: %d %%" % humidity_exterior)
 
     print()
   
@@ -198,10 +198,11 @@ while True:
     #     print()
 
         
-    #WRITING TO A CSV 
+    # WRITING TO A CSV
     print("WRITING DATA TO CSV")
-    temperature = str(temperature1) + "*" + str(temperature2) + "*" + str(temperature3)
-    humidity = str(humidity1) + "*" + str(humidity2) + "*" + str(humidity3)
+    temperature = "{}*{}*{}".format(temperature_honey, temperature_brood, temperature_exterior)
+    humidity = "{}*{}*{}".format(humidity_honey, humidity_brood, humidity_exterior)
+
 
 
     carbondioxide = co2
