@@ -1,7 +1,7 @@
 from os import path, mkdir
 import config
-import device_capture_config as device_capture
-import datetime 
+import old_device_capture_config as device_capture
+import datetime
 from datetime import datetime
 
 # paths
