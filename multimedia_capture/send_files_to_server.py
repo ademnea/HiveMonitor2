@@ -7,6 +7,8 @@ import config
 video_dir = config.base_dir+"multimedia/videos/"
 audio_dir = config.base_dir+"multimedia/audios/"
 image_dir = config.base_dir+"/multimedia/images/"
+parameter_dir = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data"
+
 
 # create an SSH client object
 ssh = paramiko.SSHClient()
@@ -18,7 +20,7 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 print()
 print()
 try:
-    ssh.connect(hostname='', username='', password='')
+    ssh.connect(hostname='137.63.185.94', username='hivemonitor', password='')
     print('Connected to server successfully')
 except Exception as e:
     print(f'Failed to connect to server: {str(e)}. Will try again later')
@@ -28,7 +30,7 @@ except Exception as e:
 remote_folder_path = config.remote_folder
 
 # set the local folder path of the files to upload
-local_folder_paths = [ image_dir, video_dir, audio_dir]
+local_folder_paths = [ image_dir, video_dir, audio_dir, parameter_dir]
 
 # create an SFTP client object using the SSH connection
 sftp = ssh.open_sftp()
