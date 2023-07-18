@@ -1,5 +1,3 @@
-import paramiko
-import time
 import datetime
 import sys
 import os
@@ -14,9 +12,6 @@ sys.path.append('/home/pi/Desktop/HiveMonitor2/')
 
 from hx711py.hx711 import HX711
 from multimedia_capture.config import node_id
-
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 HIVEID = str(node_id)
 filename = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data/" + HIVEID + ".csv"
@@ -94,31 +89,6 @@ def write_data_to_csv(data):
             writer = csv.writer(f)
             writer.writerow(data)
 
-def establish_ssh_connection():
-    try:
-        ssh.connect('137.63.185.94', username='hivemonitor', password='')
-        print("Connected successfully")
-        sftp = ssh.open_sftp()
-    except:
-        print("Establishing connection to the server failed, will try again later...")
-
-    return sftp
-
-def send_csv_to_server(csv_filepath, sftp):
-    try:
-        sftp.put(csv_filepath, "/var/www/html/ademnea_website/public/arriving_hive_media/" + filename)
-        time.sleep(5)
-        os.remove(filename)
-        print("Status: Sent successfully")
-    except:
-        print("Status: Encountered issues while sending csv, will try again later")
-
-def close_ssh_connection():
-    try:
-        ssh.close()
-        print("SSH client closed successfully")
-    except:
-        print("Failed to close connection")
 
 # Main function
 def main():
@@ -161,12 +131,9 @@ def main():
     write_data_to_csv(data)
     csv_filepath = os.path.realpath(filename)
     print("CSV File created at: " + csv_filepath)
-
     
     # Send all the files
     subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py'])
-
-
 
     print()
     print()
