@@ -6,6 +6,8 @@ from subprocess import call
 from datetime import datetime
 import sounddevice as sd
 import soundfile as sf
+import subprocess
+
 
 timeString = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 
@@ -40,6 +42,19 @@ class Capture:
         self.files.append([self.change_format(vid_path), "video"])
         vid_path = video_dir + str(config.node_id)+  '_' + timeString  +  '.mp4'
         return vid_path
+    
+    # def record_audio(self, record_seconds=10):
+    #     audio_dir = "/home/pi/Desktop/HiveMonitor2/multimedia_capture/multimedia/audios/"
+    #     filename = f"{audio_dir}{config.node_id}_{time.strftime('%Y%m%d_%H%M%S')}.wav"
+    #     command = f"arecord -r 44100 -d {record_seconds} -f S16_LE {filename}"
+        
+    #     try:
+    #         subprocess.run(command, shell=True, check=True)
+    #         self.files.append([self.change_format(filename), "audio"])
+    #         return filename
+    #     except subprocess.CalledProcessError as e:
+    #         print(f"Failed to record audio: {e}")
+    #         return None
 
     def record_audio(self, record_seconds=10):
         sample_rate = 44100  # Sample rate (Hz)
