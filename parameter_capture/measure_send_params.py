@@ -7,14 +7,14 @@ import board
 import adafruit_dht
 import subprocess
 
-sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py')
-sys.path.append('/home/pi/Desktop/HiveMonitor2/')
+sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py') #put to config 
+sys.path.append('/home/pi/Desktop/HiveMonitor2/') #input to config 
 
 from hx711py.hx711 import HX711
 from multimedia_capture.config import node_id
 
 HIVEID = str(node_id)
-filename = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data/" + HIVEID + ".csv"
+filename = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data/" + HIVEID + ".csv" #put to config 
 # filename = HIVEID + ".csv"
 EMPTY_HIVE_WEIGHT = 10
 
@@ -76,7 +76,6 @@ def measure_temperature_humidity(sensor):
         print("Error with temperature and humidity sensor:", e)
         temperature = 2
         humidity = 2
-
     return temperature, humidity
 
 def write_data_to_csv(data):
@@ -88,7 +87,6 @@ def write_data_to_csv(data):
         with open(filename, 'a') as f:
             writer = csv.writer(f)
             writer.writerow(data)
-
 
 # Main function
 def main():
