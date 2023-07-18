@@ -96,7 +96,7 @@ def write_data_to_csv(data):
 
 def establish_ssh_connection():
     try:
-        ssh.connect('137.63.185.94', username='hivemonitor', password='Ad@mnea321')
+        ssh.connect('137.63.185.94', username='hivemonitor', password='')
         print("Connected successfully")
         sftp = ssh.open_sftp()
     except:
