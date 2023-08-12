@@ -6,9 +6,9 @@ import RPi.GPIO as GPIO
 import board
 import adafruit_dht
 import subprocess
-from parameter_capture.measure_send_params import measure_weight
-from parameter_capture.measure_send_params import measure_temperature_humidity
-from parameter_capture.measure_send_params import write_data_to_csv
+from parameter_capture.capture_parameters import measure_weight
+from parameter_capture.capture_parameters import measure_temperature_humidity
+from parameter_capture.capture_parameters import write_data_to_csv
 
 sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py')
 sys.path.append('/home/pi/Desktop/HiveMonitor2/')
