@@ -6,8 +6,8 @@ import datetime
 import subprocess
 import adafruit_dht
 import RPi.GPIO as GPIO
-sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py') #TODO: input to config 
 sys.path.append('/home/pi/Desktop/HiveMonitor2/') #TODO: input to config 
+sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py') #TODO: input to config 
 
 from hx711py.hx711 import HX711
 from multimedia_capture.config import node_id
@@ -31,7 +31,7 @@ class ParameterCapture:
         self.hx.set_reading_format("MSB", "MSB")
         self.hx.set_reference_unit(self.referenceUnit)
         self.hx.reset()
-        self.hx.tare()
+        self.hx.tare() 
 
     # Clean up and exit the program
     def clean_and_exit(self):
@@ -105,9 +105,9 @@ class ParameterCapture:
         temperature_honey, humidity_honey = self.measure_temperature_humidity(self.honey_dht11)
         temperature_brood, humidity_brood = self.measure_temperature_humidity(self.brood_dht11)
         temperature_exterior, humidity_exterior = self.measure_temperature_humidity(self.climate_dht11)
-        print("Temperature Honey:", temperature_honey, "C Humidity Honey:", humidity_honey)
-        print("Temperature Brood:", temperature_brood, "C Humidity Brood:", humidity_brood)
-        print("Temperature Exterior:", temperature_exterior, "C Humidity Exterior:", humidity_exterior)
+        print("Temperature Honey:", temperature_honey, "C Humidity Honey:", humidity_honey, "%")
+        print("Temperature Brood:", temperature_brood, "C Humidity Brood:", humidity_brood, "%")
+        print("Temperature Exterior:", temperature_exterior, "C Humidity Exterior:", humidity_exterior, "%")
         print()
 
         # Write data to CSV
