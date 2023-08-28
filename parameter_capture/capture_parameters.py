@@ -1,11 +1,16 @@
 import os
 import sys
 import csv
+import time
 import board
+import analyse 
 import datetime
 import subprocess
 import adafruit_dht
 import RPi.GPIO as GPIO
+from sensirion_i2c_scd import Scd4xI2cDevice
+from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
+
 sys.path.append('/home/pi/Desktop/HiveMonitor2/') #TODO: input to config 
 sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py') #TODO: input to config 
 
@@ -21,10 +26,12 @@ class ParameterCapture:
         self.filename = f"/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data/{self.HIVEID}.csv"
         self.EMPTY_HIVE_WEIGHT = 10
 
-        # Initialize DHT11 sensors and weight module
+        # Initialize DHT11 sensors
         self.honey_dht11 = adafruit_dht.DHT11(board.D21)
         self.brood_dht11 = adafruit_dht.DHT11(board.D5)
         self.climate_dht11 = adafruit_dht.DHT11(board.D6)
+
+        # Initialize weight module
         self.EMULATE_HX711 = False
         self.referenceUnit = -14.975
         self.hx = HX711(2, 3)
@@ -32,6 +39,7 @@ class ParameterCapture:
         self.hx.set_reference_unit(self.referenceUnit)
         self.hx.reset()
         self.hx.tare() 
+       
 
     # Clean up and exit the program
     def clean_and_exit(self):
@@ -74,6 +82,37 @@ class ParameterCapture:
             humidity = 2
         return temperature, humidity
 
+    def capture_carbondioxide(self):
+        try:
+            with LinuxI2cTransceiver('/dev/i2c-1') as i2c_transceiver:
+                i2c_connection = I2cConnection(i2c_transceiver)    
+                scd41 = Scd4xI2cDevice(i2c_connection)
+                scd41.set_automatic_self_calibration = True
+                scd41.get_automatic_self_calibration
+
+                # Start periodic measurement in high power mode
+                scd41.stop_periodic_measurement()
+                time.sleep(1)
+                scd41.reinit()
+                time.sleep(5)
+                scd41.start_periodic_measurement()
+
+                # Measure every 5 seconds
+                for i in range(0, 1):
+                    time.sleep(5)
+                    co2, temperature, humidity = scd41.read_measurement()
+                    print("Carbondioxide : " + "{:d} ppm CO2".format(co2.co2))
+
+                scd41.stop_periodic_measurement()
+
+            co2 = str(co2).split(" ")[0]
+        except:
+            co2 = "2"
+            print("ERROR WITH CARBONDIOXIDE SENSOR....... Carbondioxide =  2")
+            print()
+
+        return co2
+
     # Write data to CSV file
     def write_data_to_csv(self, data):
         if not os.path.exists(self.filename):
@@ -96,6 +135,11 @@ class ParameterCapture:
         # Capture multimedia files
         # subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/capture.py'])
 
+        # Capture carbon dioxide levels
+        co2 = self.capture_carbondioxide()
+        print("Carbondioxide:", co2, "ppm")
+        print()
+
         # Measure hive weight
         weight = self.measure_weight()
         print("Weight:", weight, "kg")
@@ -114,7 +158,7 @@ class ParameterCapture:
         print("WRITING DATA TO CSV")
         temperature = "{}*{}*{}".format(temperature_honey, temperature_brood, temperature_exterior)
         humidity = "{}*{}*{}".format(humidity_honey, humidity_brood, humidity_exterior)
-        carbondioxide = 2  # Placeholder for CO2 measurement
+        carbondioxide = co2
         weight = str(weight)
         date1 = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = [date1, temperature, humidity, carbondioxide, weight]
@@ -130,4 +174,4 @@ class ParameterCapture:
 # Create an instance of ParameterCapture class and run the capture process
 if __name__ == "__main__":
     capture = ParameterCapture()
-    capture.run_capture()
+    capture.capture_carbondioxide()
