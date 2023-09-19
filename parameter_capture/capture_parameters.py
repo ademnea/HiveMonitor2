@@ -174,4 +174,4 @@ class ParameterCapture:
 # Create an instance of ParameterCapture class and run the capture process
 if __name__ == "__main__":
     capture = ParameterCapture()
-    capture.capture_carbondioxide()
+    capture.run_capture()
