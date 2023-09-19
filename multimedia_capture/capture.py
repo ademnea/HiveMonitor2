@@ -70,16 +70,17 @@ class Capture:
         return img_path
 
     def capture_video(self, capture_duration=10):
-        vid_path = self.video_dir + str(config.node_id) + '_' + config.timeString + '.h264'
+        vid_path = self.video_dir + str(config.node_id) + '_' + config.timeString + ".h264"
         if(config.picamera_version == 2):
             self.init_camera()
             self.camera.start_recording(vid_path)
             self.camera.wait_recording(capture_duration)
             self.camera.stop_recording()
         elif(config.picamera_version == 3):
-            video_result = subprocess.run(["libcamera-vid", "-t",str(capture_duration), "-o", vid_path, "--width", "1280", "--height", "720", "-n"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            # print(video_result.stdout.decode("utf-8")) # Print the output as camera takes photo(if any)
+            video_result = subprocess.run(["libcamera-vid", "-t",str(capture_duration * 1000), "-o", vid_path , "--width", "1280", "--height", "720", "-n"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # print(video_result.stdout.decode("utf-8")) # Print the output as camera takes videos(if any)
             print(video_result.stderr.decode("utf-8"))   # Print the errors (if any)
+        print(vid_path)
         self.change_format(vid_path)
         vid_path = self.video_dir + str(config.node_id) + '_' + config.timeString + '.mp4'
         return vid_path
