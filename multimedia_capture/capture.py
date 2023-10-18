@@ -86,29 +86,31 @@ class Capture:
         return vid_path
 
     def capture_audio(self, capture_seconds=10):
-        sample_rate = 44100  # Sample rate (Hz)
-        channels = 2  # Number of audio channels
-        duration = capture_seconds  # Duration of the recording (seconds)
-        frames = int(duration * sample_rate)  # Number of frames
-        recording = sd.rec(frames, samplerate=sample_rate, channels=channels) # Start the recording
-        sd.wait()   # Wait for the recording to complete
-        aud_path = self.audio_dir + str(config.node_id) + '_' + config.timeString + '.wav'   # Generate a unique filename based on the current timestamp
-        sf.write(aud_path, recording, sample_rate)  # Save the recorded audio to a WAV file
-        return aud_path
+        if config.pi_version == 0:
+            return self.pizero_capture_audio(capture_seconds)
+        else:
+            sample_rate = 44100
+            channels = 2
+            duration = capture_seconds
+            frames = int(duration * sample_rate)
+            recording = sd.rec(frames, samplerate=sample_rate, channels=channels)
+            sd.wait()
+            aud_path = self.audio_dir + str(config.node_id) + '_' + config.timeString + '.wav'
+            sf.write(aud_path, recording, sample_rate)
+            return aud_path
     
     #for pi zero
-    # def record_audio(self, record_seconds=10): 
-    #     audio_dir = "/home/pi/Desktop/HiveMonitor2/multimedia_capture/multimedia/audios/"
-    #     filename = f"{audio_dir}{config.node_id}_{time.strftime('%Y%m%d_%H%M%S')}.wav"
-    #     command = f"arecord -r 44100 -d {record_seconds} -f S16_LE {filename}"
+    def pizero_capture_audio(self, capture_seconds=10):  
+        audio_dir = "/home/pi/Desktop/HiveMonitor2/multimedia_capture/multimedia/audios/"
+        filename = f"{audio_dir}{config.node_id}_{config.timeString}.wav"
+        command = f"arecord -D plughw:0 -c1 -r 48000 -d {capture_seconds} -V mono -f S32_LE {filename}"
         
-    #     try:
-    #         subprocess.run(command, shell=True, check=True)
-    #         self.files.append([self.change_format(filename), "audio"])
-    #         return filename
-    #     except subprocess.CalledProcessError as e:
-    #         print(f"Failed to record audio: {e}")
-    #         return None
+        try:
+            subprocess.run(command, shell=True, check=True)
+            return filename
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to record audio: {e}")
+            return None
     
 
     def run_capture(self):
