@@ -3,7 +3,6 @@ import sys
 import csv
 import time
 import board
-import analyse 
 import datetime
 import subprocess
 import adafruit_dht
@@ -33,8 +32,8 @@ class ParameterCapture:
 
         # Initialize weight module
         self.EMULATE_HX711 = False
-        self.referenceUnit = -14.975
-        self.hx = HX711(2, 3)
+        self.referenceUnit = -52.14
+        self.hx = HX711(0, 1)
         self.hx.set_reading_format("MSB", "MSB")
         self.hx.set_reference_unit(self.referenceUnit)
         self.hx.reset()
@@ -133,7 +132,7 @@ class ParameterCapture:
         print()
 
         # Capture multimedia files
-        # subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/capture.py'])
+        subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/capture.py'])
 
         # Capture carbon dioxide levels
         co2 = self.capture_carbondioxide()
@@ -167,11 +166,14 @@ class ParameterCapture:
         print("CSV File created at:", csv_filepath)
 
         # Send captured files to server
-        # subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py'])
+        subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py'])
 
         print("\n\n")
 
 # Create an instance of ParameterCapture class and run the capture process
 if __name__ == "__main__":
     capture = ParameterCapture()
+
+    # while(True):
     capture.run_capture()
+        # time.sleep(1)
