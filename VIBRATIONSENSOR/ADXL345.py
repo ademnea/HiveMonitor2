@@ -21,7 +21,7 @@ class ADXL345:
 
     # Compare the currently retrieved coordinates to the most recent saved coordinates
     def compare_coordinates(current_coordinates, previous_coordinates):
-        if current_coordinates[-1] != previous_coordinates[0] or current_coordinates[1] != previous_coordinates[1] or current_coordinates[2] != previous_coordinates[2]:
+        if current_coordinates[0] != previous_coordinates[0] or current_coordinates[1] != previous_coordinates[1] or current_coordinates[2] != previous_coordinates[2]:
             return True
         else:
             return False
