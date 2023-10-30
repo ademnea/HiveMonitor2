@@ -7,6 +7,26 @@ class ADXL345:
             writer.writerow([x, y, z])
             csvfile.close()
 
+    def subtract_lists(list_a, list_b):
+
+        list_c = []
+        for i in range(len(list_a)):
+            list_c.append(list_a[i] - list_b[i])
+        if list_c[0]>=6 and list_c[1] >=6 and list_c[2]>=6:
+            return True
+    
+        else:
+            return False
+
+
+# Example usage:
+
+#list_a = [1, 2, 3]
+#list_b = [4, 5, 6]
+
+#list_c = subtract_lists(list_a, list_b)
+
+#print(list_c)
 
     # Read the most recent saved coordinates from the file
     def read_most_recent_coordinates():
