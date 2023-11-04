@@ -10,9 +10,16 @@ class ADXL345:
     def subtract_lists(list_a, list_b):
 
         list_c = []
-        for i in range(len(list_a)):
-            list_c.append(list_a[i] - list_b[i])
-        if list_c[0]>=6 and list_c[1] >=6 and list_c[2]>=6:
+        for i in range(min(len(list_a) , len(list_b))):
+            print("These are the values from list  a\n")
+            print(list_a)
+            print("These are the values from list  b \n")
+            print(list_b)
+            
+            list_c.append(float(list_a[i]) -float(list_b[i]))
+            print ("These are the values in the  C list")
+            print(list_c)
+        if list_c[0]>=1 and list_c[1] >=1 and list_c[2]>= 1:
             return True
     
         else:
@@ -35,7 +42,10 @@ class ADXL345:
             coordinates = []
             
             for row in reader:
-                coordinates.append(row[-1])
+                i = 0
+                while i < 3:
+                    coordinates.append(row[i])
+                    i = i + 1
             csvfile.close()
         return coordinates
 
