@@ -220,7 +220,7 @@ def mainprog():
     archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
     archive += ".csv"
     print("Saving to %s" %archive)
-    arch = open(archive, "w")
+    arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/fft_log/"+archive, "w")
     num_data = len(xf)
     indice = 0;
     while (indice < num_data):
