@@ -183,13 +183,13 @@ def mainprog():
     archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
     archive += ".csv"
     print("Saving to %s" %archive)
-    arch = open(archive, "w")
+    arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/csv/"+archive, "w")
     num_data = len(channel_1)
     indice = 0;
     while (indice < num_data):
         arch.write(str(channel_1[indice])+","+str(channel_2[indice])+","+str(channel_3[indice])+"\n")
         indice = indice+1;
-    
+   
     arch.close()
     tname = archive
     print("Saving complete")
