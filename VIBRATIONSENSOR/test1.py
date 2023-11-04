@@ -26,7 +26,7 @@ previous_coordinates = ADXL345.read_most_recent_coordinates()
 
 print(previous_coordinates)
 # Compare the coordinates
-if ADXL345.compare_coordinates(current_coordinates, previous_coordinates) and ADXL345.subtract_lists(current_coordinates , previous_cordinate) :
+if ADXL345.compare_coordinates(current_coordinates, previous_coordinates) and ADXL345.subtract_lists(current_coordinates , previous_coordinates) :
   # The sensor has been moved
   print("The sensor has been moved!")
 else:
