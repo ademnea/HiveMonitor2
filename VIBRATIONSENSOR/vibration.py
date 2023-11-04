@@ -189,7 +189,7 @@ def mainprog():
     while (indice < num_data):
         arch.write(str(channel_1[indice])+","+str(channel_2[indice])+","+str(channel_3[indice])+"\n")
         indice = indice+1;
-   
+
     arch.close()
     tname = archive
     print("Saving complete")
@@ -200,18 +200,20 @@ def mainprog():
     channel_fft_y = []
     channel_fft_z = []
     
+    # I had to add int() to N/2 since the np.linspace() function expects the second argument to be an integer
     N = len(channel_1) # length of the signal
     T = 1.0 / sample_rate
-    xf = np.linspace(0.0, 1.0/(2.0*T), N/2)
+    xf = np.linspace(0.0, 1.0/(2.0*T), int(N/2))
     
+    # Had to add int() to N/2 we can't slice an array with a non-integer value
     yf1 = fftpack.fft(channel_1)
-    channel_fft_x = 2.0/N * np.abs(yf1[:N/2])
+    channel_fft_x = 2.0/N * np.abs(yf1[:int(N/2)])
     
     yf2 = fftpack.fft(channel_2)
-    channel_fft_y = 2.0/N * np.abs(yf2[:N/2])
+    channel_fft_y = 2.0/N * np.abs(yf2[:int(N/2)])
     
     yf3 = fftpack.fft(channel_3)
-    channel_fft_z = 2.0/N * np.abs(yf3[:N/2])
+    channel_fft_z = 2.0/N * np.abs(yf3[:int(N/2)])
     
     #####saving to CSV file#####
     archive = "fft_logfile_"
@@ -224,7 +226,7 @@ def mainprog():
     while (indice < num_data):
         arch.write(str(xf[indice])+","+str(channel_fft_x[indice])+","+str(channel_fft_y[indice])+","+str(channel_fft_z[indice])+"\n")
         indice = indice+1;
-        
+       
     arch.close()
     fname = archive
     print("Saving complete")
