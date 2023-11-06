@@ -172,6 +172,10 @@ def mainprog():
     print("Vdc Channel 3: ",vdc_channel_3)
     
     #####Subtract DC offset#####
+    '''
+    This operation is used to remove the DC offset from each channel, 
+    resulting in a signal with its average value centered around zero.
+    '''
     for indice in X:
         channel_1[indice] -= vdc_channel_1
         channel_2[indice] -= vdc_channel_2
@@ -199,12 +203,10 @@ def mainprog():
     channel_fft_y = []
     channel_fft_z = []
     
-    # I had to add int() to N/2 since the np.linspace() function expects the second argument to be an integer
     N = len(channel_1) # length of the signal
     T = 1.0 / sample_rate
     xf = np.linspace(0.0, 1.0/(2.0*T), int(N/2))
     
-    # Had to add int() to N/2 we can't slice an array with a non-integer value
     yf1 = fftpack.fft(channel_1)
     channel_fft_x = 2.0/N * np.abs(yf1[:int(N/2)])
     
