@@ -146,12 +146,12 @@ def mainprog():
     print("Amount of samples in channel 2: %s" %len(channel_2))
     print("Amount of samples in channel 3: %s" %len(channel_3))
     
-    #####saving to TXT file#####
-    archive = "textfile_"
-    archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
-    archive += ".txt"
-    print("Saving to %s" %archive)
-    record(channel_1, channel_2, channel_3, archive)
+    # #####saving to TXT file#####
+    # archive = "textfile_"
+    # archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
+    # archive += ".txt"
+    # print("Saving to %s" %archive)
+    # record(channel_1, channel_2, channel_3, archive)
     
     #####Calculate average value for each channel#####
     num_data = len(channel_1)
@@ -181,21 +181,21 @@ def mainprog():
         channel_2[indice] -= vdc_channel_2
         channel_3[indice] -= vdc_channel_3
     
-    #####saving to CSV file#####
-    archive = "time_logfile_"
-    archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
-    archive += ".csv"
-    print("Saving to %s" %archive)
-    arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/csv/"+archive, "w")
-    num_data = len(channel_1)
-    indice = 0;
-    while (indice < num_data):
-        arch.write(str(channel_1[indice])+","+str(channel_2[indice])+","+str(channel_3[indice])+"\n")
-        indice = indice+1;
+    # #####saving to CSV file#####
+    # archive = "time_logfile_"
+    # archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
+    # archive += ".csv"
+    # print("Saving to %s" %archive)
+    # arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/csv/"+archive, "w")
+    # num_data = len(channel_1)
+    # indice = 0;
+    # while (indice < num_data):
+    #     arch.write(str(channel_1[indice])+","+str(channel_2[indice])+","+str(channel_3[indice])+"\n")
+    #     indice = indice+1;
 
-    arch.close()
-    tname = archive
-    print("Saving complete")
+    # arch.close()
+    # tname = archive
+    # print("Saving complete")
     
     #####calculation of fft#####
     
