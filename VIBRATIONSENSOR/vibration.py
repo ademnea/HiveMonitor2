@@ -231,7 +231,7 @@ def mainprog():
     arch.close()
     fname = archive
     print("Saving complete")
-    print("END")r
+    print("END")
     return(fname)
    
 
