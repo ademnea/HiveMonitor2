@@ -40,7 +40,6 @@ channel_2 = []
 channel_3 = []
 
 #####functions#####
-###didnt really understand this function so, i will ask Arthur
 def conv_str_tag(channel, tag):
     # Convert every channel from int to str, separated by a coma and adds tags at the beginning and end.
     n = len(channel)
@@ -51,7 +50,7 @@ def conv_str_tag(channel, tag):
     return s_channel
 
 #####Add tags and save on file#####
-def record(channel_1, channel_2, channel_3, archive):# will try understanding 
+def record(channel_1, channel_2, channel_3, archive):
     str_channel = ''
     str_channel += conv_str_tag(channel_1, 'L1') + '\n'
     str_channel += conv_str_tag(channel_2, 'L2') + '\n'
@@ -232,7 +231,6 @@ def mainprog():
     print("Saving complete")
     return(tname,fname)
     print("END")
-
 
 if __name__ == "__main__":
     mainprog()
