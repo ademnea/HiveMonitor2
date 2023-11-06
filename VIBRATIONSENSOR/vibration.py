@@ -231,8 +231,9 @@ def mainprog():
     arch.close()
     fname = archive
     print("Saving complete")
-    return(tname,fname)
-    print("END")
+    print("END")r
+    return(fname)
+   
 
 if __name__ == "__main__":
     mainprog()
