@@ -5,13 +5,21 @@ import matplotlib.pyplot as plt
 
 sample_rate = 1030    # Sampling frequency.
 
+# def simpleParse(mainString, beginString, endString ):
+#     #Search for a substring between beginString and endString
+#     posBeginString = string.find(mainString, beginString) + len(beginString)
+#     posEndString = string.find(mainString, endString)
+#     result = mainString[posBeginString:posEndString]
+#     return result
+
 def simpleParse(mainString, beginString, endString ):
-    #Search for a substring between beginString and endString
-    posBeginString = string.find(mainString, beginString) + len(beginString)
-    posEndString = string.find(mainString, endString)
+    # Ensure mainString is a string
+    mainString = str(mainString)
+    # Search for a substring between beginString and endString
+    posBeginString = mainString.find(beginString) + len(beginString)
+    posEndString = mainString.find(endString)
     result = mainString[posBeginString:posEndString]
     return result
-
 
 def extract_int_tag(data_arch, tag):
     #Extracts data from string data_str, delimited by <tag> y </tag> and converts it to integer numbers.
@@ -28,7 +36,7 @@ def extract_int_tag(data_arch, tag):
 	
 # name_archive = raw_input('File to open: ')
 # name_archive += ".txt"
-name_archive = "/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/textfile/textfile_04-11-2023__19_24_56.txt"
+name_archive = "/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/textfile/textfile_04-11-2023__20_21_12.txt"
 print('Opening file: ' + name_archive)
 archive = name_archive
 
@@ -110,10 +118,11 @@ N = len(channel_fft) # length of the signal
 T = 1.0 / sample_rate
 y = channel_fft
 yf = fftpack.fft(y)
-xf = np.linspace(0.0, 1.0/(2.0*T), N/2)
+xf = np.linspace(0.0, 1.0/(2.0*T), int(N/2))
+
 
 ax = fig2.add_subplot(3,1,1)
-ax.plot(xf, 2.0/N * np.abs(yf[:N/2]))
+ax.plot(xf, 2.0/N * np.abs(yf[:int(N/2)]))
 ax.grid()
 ax.set_title("Channel X")
 ax.set_xlabel('Hz')
@@ -127,10 +136,10 @@ N = len(channel_fft) # length of the signal
 T = 1.0 / sample_rate
 y = channel_fft
 yf = fftpack.fft(y)
-xf = np.linspace(0.0, 1.0/(2.0*T), N/2)
+xf = np.linspace(0.0, 1.0/(2.0*T), int(N/2))
 
 ax = fig2.add_subplot(3,1,2)
-ax.plot(xf, 2.0/N * np.abs(yf[:N/2]))
+ax.plot(xf, 2.0/N * np.abs(yf[:int(N/2)]))
 ax.grid()
 ax.set_title("Channel Y")
 ax.set_xlabel('Hz')
@@ -144,10 +153,10 @@ N = len(channel_fft) # length of the signal
 T = 1.0 / sample_rate
 y = channel_fft
 yf = fftpack.fft(y)
-xf = np.linspace(0.0, 1.0/(2.0*T), N/2)
+xf = np.linspace(0.0, 1.0/(2.0*T), int(N/2))
 
 ax = fig2.add_subplot(3,1,3)
-ax.plot(xf, 2.0/N * np.abs(yf[:N/2]))
+ax.plot(xf, 2.0/N * np.abs(yf[:int(N/2)]))
 ax.grid()
 ax.set_title("Channel Z")
 ax.set_xlabel('Hz')
