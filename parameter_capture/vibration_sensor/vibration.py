@@ -2,6 +2,12 @@ import datetime
 import smbus
 from scipy import fftpack
 import numpy as np
+import sys
+
+sys.path.append('/home/pi/Desktop/HiveMonitor2/')
+
+from multimedia_capture.config import node_id
+from multimedia_capture.config import timeString
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]
@@ -57,7 +63,7 @@ def record(channel_1, channel_2, channel_3, archive):
     str_channel += conv_str_tag(channel_3, 'L3') + '\n'
 
     # Write to file
-    arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/textfile/"+archive, "w")
+    arch = open("/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/text_file/"+archive, "w")
     arch.write(str_channel)
     arch.close()
 
@@ -146,12 +152,12 @@ def mainprog():
     print("Amount of samples in channel 2: %s" %len(channel_2))
     print("Amount of samples in channel 3: %s" %len(channel_3))
     
-    #####saving to TXT file#####
-    archive = "text_file_"
-    archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
-    archive += ".txt"
-    print("Saving to %s" %archive)
-    record(channel_1, channel_2, channel_3, archive)
+    # #####saving to TXT file#####
+    # archive = "text_file_"
+    # archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
+    # archive += ".txt"
+    # print("Saving to %s" %archive)
+    # record(channel_1, channel_2, channel_3, archive)
     
     #####Calculate average value for each channel#####
     num_data = len(channel_1)
@@ -217,11 +223,9 @@ def mainprog():
     channel_fft_z = 2.0/N * np.abs(yf3[:int(N/2)])
     
     #####saving to CSV file#####
-    archive = "fft_logfile_"
-    archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
-    archive += ".csv"
+    archive = "vibration_"+str(node_id)+ "_" + str(timeString)+".csv"
     print("Saving to %s" %archive)
-    arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/fft_log/"+archive, "w")
+    arch = open("/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/fft_log/"+archive, "w")
     num_data = len(xf)
     indice = 0;
     while (indice < num_data):
