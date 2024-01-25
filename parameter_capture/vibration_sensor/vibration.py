@@ -123,7 +123,7 @@ class ADXL345:
         return {"x": x, "y": y, "z": z}
 
 
-def mainprog():    
+def mainprog():
     adxl345 = ADXL345()
     print("START")
     print("Collecting sensor readings")
@@ -146,12 +146,12 @@ def mainprog():
     print("Amount of samples in channel 2: %s" %len(channel_2))
     print("Amount of samples in channel 3: %s" %len(channel_3))
     
-    # #####saving to TXT file#####
-    # archive = "textfile_"
-    # archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
-    # archive += ".txt"
-    # print("Saving to %s" %archive)
-    # record(channel_1, channel_2, channel_3, archive)
+    #####saving to TXT file#####
+    archive = "text_file_"
+    archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
+    archive += ".txt"
+    print("Saving to %s" %archive)
+    record(channel_1, channel_2, channel_3, archive)
     
     #####Calculate average value for each channel#####
     num_data = len(channel_1)

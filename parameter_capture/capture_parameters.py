@@ -2,13 +2,53 @@ import os
 import sys
 import csv
 import time
+import smbus
 import board
 import datetime
 import subprocess
+import numpy as np
 import adafruit_dht
 import RPi.GPIO as GPIO
+from scipy import fftpack
 from sensirion_i2c_scd import Scd4xI2cDevice
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
+
+# select the correct i2c bus for this revision of Raspberry Pi
+revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]
+bus = smbus.SMBus(1 if int(revision, 16) >= 4 else 0)
+
+# ADXL345 constants
+EARTH_GRAVITY_MS2   = 9.80665
+SCALE_MULTIPLIER    = 0.004
+
+DATA_FORMAT         = 0x31 # This is used to set the sensitivity to 16g by accessing the register
+BW_RATE             = 0x2C
+POWER_CTL           = 0x2D
+
+BW_RATE_1600HZ      = 0x0F # used for the bandwidth setting
+BW_RATE_800HZ       = 0x0E
+BW_RATE_400HZ       = 0x0D
+BW_RATE_200HZ       = 0x0C
+BW_RATE_100HZ       = 0x0B
+BW_RATE_50HZ        = 0x0A
+BW_RATE_25HZ        = 0x09
+
+RANGE_2G            = 0x00
+RANGE_4G            = 0x01
+RANGE_8G            = 0x02
+RANGE_16G           = 0x03
+
+MEASURE             = 0x08
+AXES_DATA           = 0x32
+
+#other constants
+samples_to_read = 10000
+sample_rate = 1030
+
+channel_1 = []
+channel_2 = []
+channel_3 = []
+
 
 sys.path.append('/home/pi/Desktop/HiveMonitor2/') #TODO: input to config 
 sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py') #TODO: input to config 
@@ -112,6 +152,28 @@ class ParameterCapture:
 
         return co2
 
+    #####functions#####
+    def conv_str_tag(channel, tag):
+        # Convert every channel from int to str, separated by a coma and adds tags at the beginning and end.
+        n = len(channel)
+        s_channel = '<' + tag + '>'
+        for i in range(n-1):
+            s_channel = s_channel + str(channel[i]) + ','
+        s_channel = s_channel + str(channel[n-1]) + '</'+ tag + '>'
+        return s_channel
+
+    #####Add tags and save on file#####
+    def record(channel_1, channel_2, channel_3, archive):
+        str_channel = ''
+        str_channel += conv_str_tag(channel_1, 'L1') + '\n'
+        str_channel += conv_str_tag(channel_2, 'L2') + '\n'
+        str_channel += conv_str_tag(channel_3, 'L3') + '\n'
+
+        # Write to file
+        arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/textfile/"+archive, "w")
+        arch.write(str_channel)
+        arch.close()
+
     # Write data to CSV file
     def write_data_to_csv(self, data):
         if not os.path.exists(self.filename):
@@ -164,6 +226,7 @@ class ParameterCapture:
         self.write_data_to_csv(data)
         csv_filepath = os.path.realpath(self.filename)
         print("CSV File created at:", csv_filepath)
+
 
         # Send captured files to server
         subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py'])
