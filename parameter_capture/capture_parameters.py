@@ -227,6 +227,8 @@ class ParameterCapture:
         csv_filepath = os.path.realpath(self.filename)
         print("CSV File created at:", csv_filepath)
 
+        # Collecting vibration data
+        subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/vibration.py'])
 
         # Send captured files to server
         subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py'])
