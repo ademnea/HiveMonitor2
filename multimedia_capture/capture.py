@@ -1,28 +1,13 @@
-from os import path, mkdir
+import os
 import config
 import device_capture_config as device_capture
-import datetime 
+import config
 from datetime import datetime
 
-# paths
-video_dir = config.base_dir+"/multimedia/videos/"
-audio_dir = config.base_dir+"/multimedia/audios/"
-image_dir = config.base_dir+"/multimedia/images/"
-
-
-def recursive_mkdir(given_path):
-    directories = given_path.split("/")
-    length = len(directories)
-    given_path, start_index = ("/" + directories[1], 2) if given_path[0] == '/' else (directories[0], 1)
-    if not path.isdir(given_path):
-        mkdir(given_path)
-
-    for index in range(start_index, length):
-        if len(directories[index]) > 0:
-            given_path = given_path + '/' + directories[index]
-            if not path.isdir(given_path):
-                mkdir(given_path)
-
+# define the paths for storing multimedia files
+video_dir = os.path.join(config.base_dir, "multimedia/videos/")
+audio_dir = os.path.join(config.base_dir, "multimedia/audios/")
+image_dir = os.path.join(config.base_dir, "multimedia/images/")
 
 class Capture(device_capture.Capture):
     def __init__(self):
@@ -30,59 +15,33 @@ class Capture(device_capture.Capture):
         self.files = []
 
         # check if directories exist and if not create them
-        if not path.isdir(video_dir):
-            recursive_mkdir(video_dir)
-        if not path.isdir(audio_dir):
-            recursive_mkdir(audio_dir)
-        if not path.isdir(image_dir):
-            recursive_mkdir(image_dir)
-     
-
-        # check if directories exist and if not create them
-        if not path.isdir(video_dir):
-            recursive_mkdir(video_dir)
-        if not path.isdir(audio_dir):
-            recursive_mkdir(audio_dir)
-        if not path.isdir(image_dir):
-            recursive_mkdir(image_dir)
-
+        os.makedirs(video_dir, exist_ok=True)
+        os.makedirs(audio_dir, exist_ok=True)
+        os.makedirs(image_dir, exist_ok=True)
 
 if __name__ == "__main__":
+    #print empty lines for formatting
+    print("\n" * 3)
     
-    print()
-    print()
-    print()
-
+    #create an instance of the capture class
     capture = Capture()
-
+    
+    #get the current time and date as a string
     timeString = datetime.now().strftime("%Y-%m-%d_%H%M%S")
-    print()
+    print("\nDATE : " + timeString + "\n")
 
-
-    print("DATE : " + timeString)
-    print()
-
-    print("TAKING PHOTOS")
-    print()
+    #take photos
+    print("TAKING PHOTOS\n")
     image_path = capture.snap(1)
-    print()
-    print("New image taken at: " + image_path)
-    print()
-    print()
+    print("\nNew image taken at: " + image_path + "\n\n")
 
-    print("CAPTURING VIDEO")
-    print()
+    #capture video
+    print("CAPTURING VIDEO\n")
     video_path = capture.record_video()
-    print()
-    print("New video taken at: " + video_path)
-    print()
-    print()
+    print("\nNew video taken at: " + video_path + "\n\n")
 
-    print("CAPTURING AUDIO")
-    print()
+    #capture audio
+    print("CAPTURING AUDIO\n")
     audio_path = capture.record_audio()
-    print()
-    print("New audio taken at: " + audio_path)
-    print()
-    print()
-    print()
+    print("\nNew audio taken at: " + audio_path + "\n\n")
+
