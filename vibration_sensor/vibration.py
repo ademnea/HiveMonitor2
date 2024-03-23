@@ -4,10 +4,9 @@ from scipy import fftpack
 import numpy as np
 import sys
 
-sys.path.append('/home/pi/Desktop/HiveMonitor2/')
 
-from multimedia_capture.config import node_id
-from multimedia_capture.config import timeString
+from multim_config import node_id
+from multim_config import timeString
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]

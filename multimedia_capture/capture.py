@@ -1,23 +1,24 @@
 import time
-import multim_config
+from multim_config import picamera_version, node_id, timeString
 import datetime
 import subprocess
 import soundfile as sf
 import sounddevice as sd
-from os import path, mkdir
+from os import path, mkdir, getcwd
 from subprocess import call
 from datetime import datetime
 from picamera import PiCamera
 
+base_dir = os.getcwd()
 class Capture:
     def __init__(self):
         self.camera = None
-        self.picamera_version = multim_config.picamera_version
+        self.picamera_version = picamera_version
 
         # setting  file paths for storing media files
-        self.video_dir = multim_config.base_dir+"multimedia/videos/"
-        self.audio_dir = multim_config.base_dir+"multimedia/audios/"
-        self.image_dir = multim_config.base_dir+"multimedia/images/"
+        self.video_dir = base_dir+"multimedia/videos/"
+        self.audio_dir = base_dir+"multimedia/audios/"
+        self.image_dir = base_dir+"multimedia/images/"
 
         self.ensure_directories_exist()
 
@@ -58,11 +59,11 @@ class Capture:
 
     def capture_photo(self):
         time.sleep(2)
-        img_path = self.image_dir + str(multim_config.node_id) + '_' + multim_config.timeString + '.jpg'
-        if(multim_config.picamera_version == 2):
+        img_path = self.image_dir + str(node_id) + '_' + timeString + '.jpg'
+        if(picamera_version == 2):
             self.init_camera()
             self.camera.capture(img_path)
-        elif(multim_config.picamera_version == 3):
+        elif(picamera_version == 3):
             image_result = subprocess.run(["libcamera-jpeg", "-o", img_path, "--width", "1920", "--height", "1080", "-n"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             # print(image_result.stdout.decode("utf-8")) # Print the output as camera takes photo(if any)
             print(image_result.stderr.decode("utf-8"))   # Print the errors (if any)
@@ -70,23 +71,23 @@ class Capture:
         return img_path
 
     def capture_video(self, capture_duration=10):
-        vid_path = self.video_dir + str(multim_config.node_id) + '_' + multim_config.timeString + ".h264"
-        if(multim_config.picamera_version == 2):
+        vid_path = self.video_dir + str(node_id) + '_' + timeString + ".h264"
+        if(picamera_version == 2):
             self.init_camera()
             self.camera.start_recording(vid_path)
             self.camera.wait_recording(capture_duration)
             self.camera.stop_recording()
-        elif(multim_config.picamera_version == 3):
+        elif(picamera_version == 3):
             video_result = subprocess.run(["libcamera-vid", "-t",str(capture_duration * 1000), "-o", vid_path , "--width", "1280", "--height", "720", "-n"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             # print(video_result.stdout.decode("utf-8")) # Print the output as camera takes videos(if any)
             print(video_result.stderr.decode("utf-8"))   # Print the errors (if any)
         print(vid_path)
         self.change_format(vid_path)
-        vid_path = self.video_dir + str(multim_config.node_id) + '_' + multim_config.timeString + '.mp4'
+        vid_path = self.video_dir + str(node_id) + '_' + timeString + '.mp4'
         return vid_path
 
     def capture_audio(self, capture_seconds=10):
-        if multim_config.pi_version == 0:
+        if pi_version == 0:
             return self.pizero_capture_audio(capture_seconds)
         else:
             sample_rate = 44100
@@ -95,14 +96,14 @@ class Capture:
             frames = int(duration * sample_rate)
             recording = sd.rec(frames, samplerate=sample_rate, channels=channels)
             sd.wait()
-            aud_path = self.audio_dir + str(multim_config.node_id) + '_' + multim_config.timeString + '.wav'
+            aud_path = self.audio_dir + str(node_id) + '_' + timeString + '.wav'
             sf.write(aud_path, recording, sample_rate)
             return aud_path
     
     #for pi zero
     def pizero_capture_audio(self, capture_seconds=10):  
         audio_dir = "/home/pi/Desktop/HiveMonitor2/multimedia_capture/multimedia/audios/"
-        filename = f"{audio_dir}{multim_config.node_id}_{multim_config.timeString}.wav"
+        filename = f"{audio_dir}{node_id}_{timeString}.wav"
         command = f"arecord -D plughw:0 -c1 -r 48000 -d {capture_seconds} -V mono -f S32_LE {filename}"
         
         try:
