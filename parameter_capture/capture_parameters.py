@@ -10,7 +10,7 @@ import adafruit_dht
 import RPi.GPIO as GPIO
 from sensirion_i2c_scd import Scd4xI2cDevice
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
-from ../config import base_dir
+base_dir = os.getcwd()
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]

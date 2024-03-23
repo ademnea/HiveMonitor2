@@ -20,19 +20,31 @@ weight parameters and sending them to the server.
 git clone -b shawal-modularised https://github.com/ademnea/HiveMonitor2 monitor && cd monitor
 ```
 
-2. Run ```sudo bash install.sh```
+2. Run the following command to install dependencies
+```bash
+sudo bash install.sh
+```
 
 3. ```sudo raspi-config``` > interface options > I2C
   Enable for I2C for smbus
   
-4. ```crontab -e``` , copy cronjobs from cron.txt and install them
+4. Run this will ask for setup and  create a cron.txt file
+```bash
+python setup.py
+```
 
-5. Run ```python setup.py```
+5. Run the following comand , copy cronjobs from cron.txt and install them
+```bash
+crontab -e
+```
 
-6. ```python main.py```
-
-
+6. Run this command to attempt the multimedia and parameter capture 
+```bash
+python main.py
+```
 
 ## SETTING UP TIME SYNCHRONIZATION
-```pass```
+```
+pass
+```
 
