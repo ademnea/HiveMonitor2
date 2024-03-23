@@ -224,7 +224,7 @@ def mainprog():
     #####saving to CSV file#####
     archive = "vibration_"+str(node_id)+ "_" + str(timeString)+".csv"
     print("Saving to %s" %archive)
-    arch = open("/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/fft_log/"+archive, "w")
+    arch = open(base_dir+"vibration_sensor/fft_log/"+archive, "w")
     num_data = len(xf)
     indice = 0;
     while (indice < num_data):

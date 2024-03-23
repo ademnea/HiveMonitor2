@@ -12,8 +12,9 @@ from hx711py.hx711 import HX711
 from sensirion_i2c_scd import Scd4xI2cDevice
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
 
-base_dir = os.getcwd()
-node_id = os.getenv("node_id")
+base_dir   = os.getcwd()
+node_id    = os.getenv("node_id")
+pi_version = os.getenv("pi_version")
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]
