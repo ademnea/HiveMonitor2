@@ -5,7 +5,7 @@ import numpy as np
 import sys
 
 
-from .multim_config import node_id, timeString
+from ..multim_config import node_id, timeString
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]

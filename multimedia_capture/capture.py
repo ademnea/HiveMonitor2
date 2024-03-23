@@ -1,5 +1,5 @@
 import time
-from .multim_config import picamera_version, node_id, timeString
+from ..multim_config import picamera_version, node_id, timeString
 import datetime
 import subprocess
 import soundfile as sf
