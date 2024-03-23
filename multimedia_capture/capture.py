@@ -9,7 +9,7 @@ from subprocess import call
 from datetime import datetime
 from picamera import PiCamera
 
-base_dir = os.getcwd()
+base_dir = getcwd()
 class Capture:
     def __init__(self):
         self.camera = None
