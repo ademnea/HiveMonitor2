@@ -6,7 +6,7 @@ import os
 # So be careful while editing, thanks 
 
 from datetime import datetime
-base_dir = os.pwd()
+base_dir = os.getcwd()
 
 node_id = 2
 username = "agatha"
