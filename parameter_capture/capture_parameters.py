@@ -172,7 +172,7 @@ class ParameterCapture:
         str_channel += conv_str_tag(channel_3, 'L3') + '\n'
 
         # Write to file
-        arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/textfile/"+archive, "w")
+        arch = open(base_dir+"vibration_sensor/textfile/"+archive, "w")
         arch.write(str_channel)
         arch.close()
 
