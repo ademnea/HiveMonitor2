@@ -54,7 +54,8 @@ sys.path.append(base_dir+'/') #TODO: input to config
 sys.path.append(base_dir+'/parameter_capture/hx711py') #TODO: input to config 
 
 from hx711py.hx711 import HX711
-from multim_config import node_id
+
+node_id = multim_config.node_id
 
 
 class ParameterCapture:
