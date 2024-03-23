@@ -1,4 +1,5 @@
 import time
+import multim_config
 import datetime
 import subprocess
 import soundfile as sf

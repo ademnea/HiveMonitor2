@@ -8,6 +8,7 @@ import datetime
 import subprocess
 import adafruit_dht
 import RPi.GPIO as GPIO
+import multim_config
 from sensirion_i2c_scd import Scd4xI2cDevice
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
 base_dir = os.getcwd()
