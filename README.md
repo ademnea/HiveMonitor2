@@ -26,7 +26,7 @@ sudo bash install.sh
 ```
 
 3. ```sudo raspi-config``` > interface options > I2C
-  Enable for I2C for smbus
+  Enable for I2C for smbus and camera module for use woth rp cam
   
 4. Run this will ask for setup and  create a cron.txt file
 ```bash

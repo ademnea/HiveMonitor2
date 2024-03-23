@@ -14,6 +14,7 @@ password = "agatha"
 base_dir = base_dir+"/multimedia_capture/"
 picamera_version = 2 #specify the pi camera module version number (2 or 3) as of August 2023 
 server_address = ""
+pi_version = 2
 image_url = "/var/www/html/ademnea_website/public/arriving_hive_media/"
 audio_url = "/var/www/html/ademnea_website/public/arriving_hive_media/"
 video_url =  "/var/www/html/ademnea_website/public/arriving_hive_media/"
