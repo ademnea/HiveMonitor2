@@ -6,12 +6,12 @@
 # So be careful while editing, thanks 
 
 from datetime import datetime
-
+from ../config import base_dir
 
 node_id = 2
 username = "agatha"
 password = "agatha"
-base_dir = "/home/pi/Desktop/HiveMonitor2/multimedia_capture/"
+base_dir = base_dir+"/multimedia_capture/"
 picamera_version = 2 #specify the pi camera module version number (2 or 3) as of August 2023 
 server_address = ""
 image_url = "/var/www/html/ademnea_website/public/arriving_hive_media/"

@@ -15,16 +15,21 @@ weight parameters and sending them to the server.
 
 ## SETTING UP FOR PARAMETER & MEDIA CAPTURE 
 
-1. Run ```bash install.sh```
+1. install git with ```sudo apt install git``` and Clone with 
+```bash
+git clone -b shawal-modularised https://github.com/ademnea/HiveMonitor2 monitor && cd monitor
+```
 
-2. ```sudo raspi-config``` > interface options > I2C
+2. Run ```sudo bash install.sh```
+
+3. ```sudo raspi-config``` > interface options > I2C
   Enable for I2C for smbus
   
-3. ```crontab -e``` , copy cronjobs from cron.txt and install them
+4. ```crontab -e``` , copy cronjobs from cron.txt and install them
 
-4. Run ```python setup.py```
+5. Run ```python setup.py```
 
-5. ```python main.py```
+6. ```python main.py```
 
 
 

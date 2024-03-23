@@ -10,6 +10,7 @@ import adafruit_dht
 import RPi.GPIO as GPIO
 from sensirion_i2c_scd import Scd4xI2cDevice
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
+from ../config import base_dir
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]
@@ -48,8 +49,8 @@ channel_2 = []
 channel_3 = []
 
 
-sys.path.append('/home/pi/Desktop/HiveMonitor2/') #TODO: input to config 
-sys.path.append('/home/pi/Desktop/HiveMonitor2/parameter_capture/hx711py') #TODO: input to config 
+sys.path.append(base_dir+'/') #TODO: input to config 
+sys.path.append(base_dir+'/parameter_capture/hx711py') #TODO: input to config 
 
 from hx711py.hx711 import HX711
 from multimedia_capture.config import node_id
@@ -60,7 +61,7 @@ class ParameterCapture:
     # Initialize the class with necessary configurations
     def __init__(self):
         self.HIVEID = str(node_id)
-        self.filename = f"/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data/{self.HIVEID}.csv"
+        self.filename = f"{base_dir}/parameter_capture/sensor_data/{self.HIVEID}.csv"
         self.EMPTY_HIVE_WEIGHT = 10
 
         # Initialize DHT11 sensors
@@ -192,7 +193,7 @@ class ParameterCapture:
         print()
 
         # Capture multimedia files
-        subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/capture.py'])
+        subprocess.run(['/bin/python', f'{base_dir}/multimedia_capture/capture.py'])
 
         # Capture carbon dioxide levels
         co2 = self.capture_carbondioxide()
@@ -226,10 +227,10 @@ class ParameterCapture:
         print("CSV File created at:", csv_filepath)
 
         # Collecting vibration data
-        subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/vibration.py'])
+        subprocess.run(['/bin/python', f'{base_dir}/parameter_capture/vibration_sensor/vibration.py'])
 
         # Send captured files to server
-        subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py'])
+        subprocess.run(['/bin/python', f'{base_dir}/multimedia_capture/send_files_to_server.py'])
 
         print("\n\n")
 

@@ -5,4 +5,3 @@ sounddevice
 smbus
 adafruit_dht
 picamera
-piaudio
