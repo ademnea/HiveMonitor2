@@ -3,5 +3,8 @@ from parameter_capture  import capture_parameters
 
 # Run the main function
 if __name__ == "__main__":
-    capture.Capture.run_capture()
-    capture_parameters.ParameterCapture.run_capture()
+    param_cap = capture_parameters.ParameterCapture()
+    multi_cap = capture.Capture()
+    
+    multi_cap.run_capture()
+    param_cap.run_capture()
