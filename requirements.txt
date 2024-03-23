@@ -1,0 +1,8 @@
+sensirion_i2c_scd
+board
+soundfile
+sounddevice
+smbus
+adafruit_dht
+picamera
+piaudio

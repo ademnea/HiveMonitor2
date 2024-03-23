@@ -6,10 +6,8 @@ import smbus
 import board
 import datetime
 import subprocess
-import numpy as np
 import adafruit_dht
 import RPi.GPIO as GPIO
-from scipy import fftpack
 from sensirion_i2c_scd import Scd4xI2cDevice
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
 
