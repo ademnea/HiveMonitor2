@@ -12,7 +12,7 @@ from picamera import PiCamera
 base_dir         = os.getcwd()
 picamera_version = os.getenv("picamera_version")
 node_id          = os.getenv("node_id")
-timeString = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+timeString       = datetime.now().strftime("%Y-%m-%d_%H%M%S")
 pi_version       = os.getenv("pi_version")
 
 class Capture:

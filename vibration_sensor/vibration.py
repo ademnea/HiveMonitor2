@@ -4,7 +4,7 @@ from scipy import fftpack
 import numpy as np
 import os
 import sys
-import datetime
+from datetime import datetime
 
 base_dir   = os.getcwd()
 node_id    = os.getenv("node_id")
