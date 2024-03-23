@@ -1,5 +1,8 @@
 from multimedia_capture import capture
 from parameter_capture  import capture_parameters
+from dotenv import load_dotenv
+
+load_dotenv() 
 
 # Run the main function
 if __name__ == "__main__":

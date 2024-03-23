@@ -1,24 +1,28 @@
 import time
-from .multim_config import picamera_version, node_id, timeString
 import datetime
 import subprocess
 import soundfile as sf
 import sounddevice as sd
-from os import path, mkdir, getcwd
+import os
+from os import path, mkdir
 from subprocess import call
 from datetime import datetime
 from picamera import PiCamera
 
-base_dir = getcwd()
+base_dir         = os.getcwd()
+picamera_version = os.getenv("picamera_version")
+node_id          = os.getenv("node_id")
+timeString       = os.getenv("timeString")
+
 class Capture:
     def __init__(self):
         self.camera = None
         self.picamera_version = picamera_version
 
         # setting  file paths for storing media files
-        self.video_dir = base_dir+"multimedia/videos/"
-        self.audio_dir = base_dir+"multimedia/audios/"
-        self.image_dir = base_dir+"multimedia/images/"
+        self.video_dir = base_dir+"/multimedia/videos/"
+        self.audio_dir = base_dir+"/multimedia/audios/"
+        self.image_dir = base_dir+"/multimedia/images/"
 
         self.ensure_directories_exist()
 
@@ -102,7 +106,7 @@ class Capture:
     
     #for pi zero
     def pizero_capture_audio(self, capture_seconds=10):  
-        audio_dir = "/home/pi/Desktop/HiveMonitor2/multimedia_capture/multimedia/audios/"
+        audio_dir = base_dir+"/multimedia_capture/multimedia/audios/"
         filename = f"{audio_dir}{node_id}_{timeString}.wav"
         command = f"arecord -D plughw:0 -c1 -r 48000 -d {capture_seconds} -V mono -f S32_LE {filename}"
         

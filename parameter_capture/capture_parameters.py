@@ -8,10 +8,12 @@ import datetime
 import subprocess
 import adafruit_dht
 import RPi.GPIO as GPIO
-from multimedia_capture import multim_config
+from hx711py.hx711 import HX711
 from sensirion_i2c_scd import Scd4xI2cDevice
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection
+
 base_dir = os.getcwd()
+node_id = os.getenv("node_id")
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]
@@ -53,9 +55,7 @@ channel_3 = []
 sys.path.append(base_dir+'/') #TODO: input to config 
 sys.path.append(base_dir+'/parameter_capture/hx711py') #TODO: input to config 
 
-from hx711py.hx711 import HX711
 
-node_id = multim_config.node_id
 
 
 class ParameterCapture:

@@ -2,12 +2,11 @@ import datetime
 import smbus
 from scipy import fftpack
 import numpy as np
+import os
 import sys
 
-
-from multimedia_capture import multim_config 
-node_id = multim_config.node_id
-timeString = multim_config.timeString
+node_id    = os.getenv("node_id")
+timeString = os.getenv("timeString")
 
 # select the correct i2c bus for this revision of Raspberry Pi
 revision = ([l[12:-1] for l in open('/proc/cpuinfo','r').readlines() if l[:8]=="Revision"]+['0000'])[0]
