@@ -228,10 +228,10 @@ class ParameterCapture:
         print("CSV File created at:", csv_filepath)
 
         # Collecting vibration data
-        subprocess.run(['/bin/python', f'{base_dir}/parameter_capture/vibration_sensor/vibration.py'])
+        subprocess.run(['/bin/python', f'{base_dir}/vibration_sensor/vibration.py'])
 
         # Send captured files to server
-        subprocess.run(['/bin/python', f'{base_dir}/multimedia_capture/send_files_to_server.py'])
+        #subprocess.run(['/bin/python', f'{base_dir}/multimedia_capture/send_files_to_server.py'])
 
         print("\n\n")
 
