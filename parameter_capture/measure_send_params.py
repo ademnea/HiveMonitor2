@@ -1,3 +1,10 @@
+"""
+    The Python script collects data from various sensors including weight, temperature, humidity, and
+    carbon dioxide levels, writes the data to a CSV file, establishes a connection to a server, and
+    sends the CSV file to the server at regular intervals.
+"""
+
+
 import paramiko
 import time
 import datetime
@@ -22,7 +29,7 @@ ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 HIVEID =   str(node_id)
-filename = HIVEID + ".csv" 
+filename = f"{HIVEID}.csv"
 EMPTY_HIVE_WEIGHT = 10
 
 ##time , date and database connection setup
@@ -48,7 +55,7 @@ referenceUnit = -14.975
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
     from hx711py.hx711 import HX711
-    
+
 else:
     from hx711py.emulated_hx711 import HX711
 
@@ -77,12 +84,12 @@ count = 1
 
 
 
+co2 = 2
 ##data reading loop
 while True:
 
     # Initialize parameters to default value (2)
     weight = 2
-    co2 = 2
     temperature_honey, temperature_brood, temperature_exterior = 2, 2, 2
     humidity_honey, humidity_brood, humidity_exterior = 2, 2, 2
 
@@ -91,20 +98,18 @@ while True:
     current_time = datetime.datetime.now()
     readable_time = current_time.strftime("%d-%m-%Y %H:%M:%S")
     print()
-    print("------------------------------------- RUN " + str(count) + " : (" + readable_time + ") -----------------------------------")
+    print(
+        f"------------------------------------- RUN {str(count)} : ({readable_time}) -----------------------------------"
+    )
     print()
 
     ##obtaining the weight
     print("MEASURING WEIGHT")
 
-     #incase weight sensor has issues , the default weight will be 2kg, this straight line 
-     #on the weight graph will indicate an error for us 
-   
-
     try:
         average_times=3
         weight_list=[]
-        for i in range(average_times):
+        for _ in range(average_times):
             val = max(0,int(hx.get_weight(5)))
             weight=(val/1000)
             weight_list.append(weight)
@@ -112,8 +117,8 @@ while True:
         weight = round(averaged_weight, 0)
         hx.power_down()
         hx.power_up()
-        
-        
+
+
         # defaulting all invalid hiveweight values
         if weight < EMPTY_HIVE_WEIGHT:
             weight = 2
@@ -122,47 +127,47 @@ while True:
             weight = 2
             print("ERROR WITH WEIGHT SENSOR! .......weight = 2kg ")
         else:
-            print("weight : " + str(weight) + 'kg')
-    except:
+            print(f"weight : {str(weight)}kg")
+    except Exception:
         weight = 2
         print("ERROR WITH WEIGHT SENSOR! .......weight = 2kg ")
 
-    
+
     print()
     ##end of weight
-        
+
     #obtaining temperature humidity and temperature    
-    
+
     print("MEASURING TEMPERATURE AND HUMIDITY") #incase of any error , temp and humidity will default to 2
     print()
-        
+
     try: 
         temperature_honey = honey_dht11.temperature
         humidity_honey = honey_dht11.humidity
     except Exception as e:
         print("Error with honey temperature and humidity sensor:", e)
-    
+
     print("Temperature Honey: %d C" % temperature_honey + " Humidity Honey: %d %%" % humidity_honey)
-    
+
     try: 
         temperature_brood = brood_dht11.temperature
         humidity_brood = brood_dht11.humidity
     except Exception as e:
         print("Error with brood temperature and humidity sensor:", e)
-    
+
     print("Temperature Brood: %d C" % temperature_brood + " Humidity Brood: %d %%" % humidity_brood)
-    
+
     try: 
         temperature_exterior = climate_dht11.temperature
         humidity_exterior = climate_dht11.humidity
     except Exception as e:
         print("Error with exterior temperature and humidity sensor:", e)
-    
+
     print("Temperature Exterior: %d C" % temperature_exterior + " Humidity Exterior: %d %%" % humidity_exterior)
 
     print()
-  
-    
+
+
     #GETTING CARBONDIOXIDE DATA
     print("MEASURING CARBONDIOXIDE") #incase of any error with sensors, temperature = 2
 
@@ -180,9 +185,9 @@ while True:
     #         # scd41.reinit()
     #         # time.sleep(5)
     #         # scd41.start_periodic_measurement()
-        
+
     #     #     # Measure every 5 seconds
-            
+
     #     # #     while True:
     #     #     for i in range(0,1):
     #     #         time.sleep(5)
@@ -198,11 +203,11 @@ while True:
     #     print("ERROR WITH CARBONDIOXIDE SENSOR....... Carbondioxide =  2")
     #     print()
 
-        
+
     # WRITING TO A CSV
     print("WRITING DATA TO CSV")
-    temperature = "{}*{}*{}".format(temperature_honey, temperature_brood, temperature_exterior)
-    humidity = "{}*{}*{}".format(humidity_honey, humidity_brood, humidity_exterior)
+    temperature = f"{temperature_honey}*{temperature_brood}*{temperature_exterior}"
+    humidity = f"{humidity_honey}*{humidity_brood}*{humidity_exterior}"
 
 
 
@@ -212,7 +217,7 @@ while True:
     date1= e1.strftime("%Y-%m-%d %H:%M:%S")
 
     data = [date1 , temperature, humidity, carbondioxide, weight]
-   
+
     if not os.path.exists(filename):
         with open(filename, 'w') as f:
             writer = csv.writer(f)
@@ -224,7 +229,7 @@ while True:
 
     #CSV path
     csvFilepath = os.path.realpath(filename)
-    print("CSV File created at : " + os.path.realpath(filename))
+    print(f"CSV File created at : {os.path.realpath(filename)}")
     print()
 
     #MAKE CONNECTION TO THE SERVER
@@ -233,19 +238,22 @@ while True:
         ssh.connect('137.63.185.94',username='hivemonitor', password= '')
         print("Connected successfully")
         sftp = ssh.open_sftp()
-    except:
+    except Exception:
         print("Establishing connection to the server failed, will try again later...")
 
     print()
-    
+
     ##sending the data  to the server
     print("SENDING CSV TO SERVER")
     try:
-        sftp.put( csvFilepath,"/var/www/html/ademnea_website/public/arriving_hive_media/"+filename)
+        sftp.put(
+            csvFilepath,
+            f"/var/www/html/ademnea_website/public/arriving_hive_media/{filename}",
+        )
         time.sleep(5)
         os.remove(filename)
         print("Status : Sent successfully")
-    except:
+    except Exception:
         print("Status : Encountered issues while sending csv , will try again later")
 
     try:
@@ -256,11 +264,11 @@ while True:
         print("Failed to close connection")
 
     print()
-    print("Sleeping for " + str(measuring_interval) + " minutes...")
+    print(f"Sleeping for {str(measuring_interval)} minutes...")
     count = count + 1
     time.sleep(delay)
 
-   
+
     print()
     print()
     print()
