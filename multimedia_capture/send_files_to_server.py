@@ -4,9 +4,9 @@ import config
 
 
 # paths
-video_dir = config.base_dir+"multimedia/videos/"
-audio_dir = config.base_dir+"multimedia/audios/"
-image_dir = config.base_dir+"/multimedia/images/"
+video_dir = os.path.join(config.base_dir, "multimedia","videos")
+audio_dir = os.path.join(config.base_dir,"multimedia","audios")
+image_dir = os.path.join(config.base_dir,"multimedia","images")
 
 # create an SSH client object
 ssh = paramiko.SSHClient()
@@ -42,16 +42,16 @@ for local_folder_path in local_folder_paths:
     if len(files) == 0:
         print()
         print()
-        print("No files to send in " + local_folder_path)
+        print(f"No files to send in {local_folder_path}")
     else:
         print()
         print()
-        print("Sending files in" + local_folder_path)
+        print(f"Sending files in {local_folder_path}")
 
         # loop through the files and use sftp.put to upload each file to the remote server
         for file in files:
             print()
-            print("Sending " + file)
+            print(f"Sending {file}")
             # set the local path of the file to upload
             local_path = os.path.join(local_folder_path, file)
             # set the remote path where the file will be uploaded on the server
