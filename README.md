@@ -1,42 +1,74 @@
-The repository contains 2 main folders i.e multimedia_capture and parameter_capture.
+# SMART BEE MONITOR CONFIGURATION
 
-Multimedia capture is in charge of capturing audio, image and videos and transfering 
-them to the server.
+This repository contains two main directories: `multimedia_capture` and `parameter_capture`.
 
-Parameter capture is in charge of capturing temperature, humidity , carbondioxide and 
-weight parameters and sending them to the server.
+- `multimedia_capture` is responsible for capturing audio, images, and videos, and transferring them to the server.
+- `parameter_capture` is responsible for capturing temperature, humidity, carbon dioxide, and weight parameters, and sending them to the server.
 
-SETTING UP FOR PARAMETER & MEDIA CAPTURE 
+## Setup for Parameter & Media Capture
 
-1.sudo pip3 install adafruit-circuitpython-dht
+Follow these steps to set up the environment:
 
-2.sudo pip3 install paramiko
+1. Install the necessary Python packages:
 
-3.sudo apt install libgpiod2
+    ```bash
+    sudo pip3 install adafruit-circuitpython-dht paramiko sounddevice soundfile
+    ```
 
-4.sudo apt-get install portaudio19-dev
+2. Install the necessary system packages:
 
-5.sudo apt install gpac
+    ```bash
+    sudo apt install libgpiod2 portaudio19-dev gpac
+    ```
 
-6.sudo pip3 install sounddevice
+3. Update the configuration in `multimedia/config` with the correct values.
 
-7.sudo pip3 install soundfile
+4. Enable the Pi camera module:
 
-8.Edit this line "import device_capture_config as device_capture" in capture.py 
-  depending on the pi camera to be used whether old or new.
+    ```bash
+    sudo raspi-config
+    ```
 
-9.sudo raspi-config > interface options > Legacy camera
-  Enable for pi camera module v3 , if lower version , disable
-  Reboot after 
-  
-10.crontab -e , copy cronjobs from cron.txt and install them
+    Navigate to `Interface Options > Legacy Camera` and enable it for Pi camera module v3. If you're using a lower version, disable it. Reboot your Raspberry Pi after this step.
 
-11.insert credentials in measure_send_params.py and send_files_to_server.py 
+5. Set up the cron jobs:
 
-12.go to config.py and set the correct node id
+    ```bash
+    crontab -e
+    ```
 
+     Copy the cron jobs from `/support_files/cron.txt` and install them. Please note that these are just sample cronjobs and you have to chose the one most suitable for your current task.  
 
+6. Insert the correct credentials in `measure_send_params.py` and `send_files_to_server.py`.
 
-SETTING UP TIME SYNCHRONIZATION
+7. Go to `config.py` and set the correct node ID.
 
+8. Configure the weight sensor by following the tutorial at [this link](https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/).
 
+## 9. Setting Up Time Synchronization
+
+The Raspberry Pi will use the time from the RTC. Make sure the RTC has a battery to maintain the correct time. Follow the tutorial at [this link](https://maker.pro/raspberry-pi/tutorial/how-to-add-an-rtc-module-to-raspberry-pi) to add an RTC module to your Raspberry Pi.
+
+During the editing of `/lib/udev/hwclock-set`, clear the file and paste the following:
+
+```bash
+#!/bin/sh
+# Reset the System Clock to UTC if the hardware clock from which it
+# was copied by the kernel was in localtime.
+
+HWCLOCKDEVICE="/dev/rtc0"
+
+if [ -e /etc/default/hwclock ] ; then
+    . /etc/default/hwclock
+fi
+
+if [ yes = "$BADYEAR" ] ; then
+    /sbin/hwclock --rtc=$HWCLOCKDEVICE --systz --badyear
+    /sbin/hwclock --rtc=$HWCLOCKDEVICE --hctosys --badyear
+else
+    /sbin/hwclock --rtc=$HWCLOCKDEVICE --systz
+    /sbin/hwclock --rtc=$HWCLOCKDEVICE --hctosys
+fi
+
+# Note 'touch' may not be available in initramfs
+# /run/udev/hwclock-set
