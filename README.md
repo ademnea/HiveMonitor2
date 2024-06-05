@@ -8,6 +8,55 @@ weight parameters and sending them to the server.
 
 SETTING UP FOR PARAMETER & MEDIA CAPTURE 
 
+
+steps to verify multi-media capture
+//install python3-venv
+1.sudo apt update 
+2.sudo apt install python3-venv
+3.sudo apt install portaudio19-dev
+
+//create a virtual environment but incase you already created on ,you cant go straight to activating it
+3.python3 -m venv ~/hivemonitor-env
+
+//activate the virtual envinronment
+4.source ~/hivemonitor-env/bin/activate
+
+//to enable camera settings
+sudo raspi-config nonint do_legacy 0
+sudo reboot
+
+//install sounddevice within the virtual environment
+5.pip install sounddevice 
+
+//install soundfile module
+6.pip install soundfile
+
+//install numpy module
+pip install numpy
+
+//install GPAC for the MP4Box
+//build it from source
+7.sudo apt update
+8.sudo apt install build-essential git pkg-config libfreetype6-dev libfontconfig1-dev libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev libsdl2-dev libcurl4-openssl-dev libmad0-dev libjpeg-dev libpng-dev libx11-dev
+
+//clone the GPAC repository
+9.git clone https://github.com/gpac/gpac.git
+
+//navigate to GPAC directory
+cd gpac
+
+//configure the build
+./configure
+
+//build and install GPAC
+make -j4
+sudo make install
+
+sudo apt install gpa
+
+//verify the installation
+python -c "import sounddevice"
+
 1.sudo pip3 install adafruit-circuitpython-dht
 
 2.sudo pip3 install paramiko
