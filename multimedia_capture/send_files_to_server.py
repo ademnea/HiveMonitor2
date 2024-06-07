@@ -7,6 +7,9 @@ import config
 video_dir = config.base_dir+"multimedia/videos/"
 audio_dir = config.base_dir+"multimedia/audios/"
 image_dir = config.base_dir+"/multimedia/images/"
+parameter_dir = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data"
+vibration_dir = "/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/fft_log" #Todo: add these to the config file
+
 
 # create an SSH client object
 ssh = paramiko.SSHClient()
@@ -28,7 +31,7 @@ except Exception as e:
 remote_folder_path = config.remote_folder
 
 # set the local folder path of the files to upload
-local_folder_paths = [ image_dir, video_dir, audio_dir]
+local_folder_paths = [ image_dir, video_dir, audio_dir, parameter_dir, vibration_dir]
 
 # create an SFTP client object using the SSH connection
 sftp = ssh.open_sftp()
