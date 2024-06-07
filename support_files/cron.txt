@@ -1,10 +1,17 @@
 #<--start of hivemonitor  crons
-# capture after 50 minutes
-*/50 * * * * python3 /home/pi/Desktop/HiveMonitor2/multimedia_capture/capture.py
+# media  capture after 50 minutes */50 * * * * @reboot  */50 * * * * @reboot */1 * * * * */50 * * * * python3 /home/pi/Desktop/HiveMonitor2/multimedia_capture/capture.p>
 
-# send after every 2 hours
-0 */2 * * * python3 /home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py
 
-# capture parameters every after 15 minutes and send .... this script is started at reboot
-@reboot python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/measure_send_params.py
+# send after every 2 hour 0 */2 * * *  */2 * * * * 0 */2 * * * 0 */2 * * * python3 /home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py >> /home/pi/>
+
+
+# parameter capture every after 15 minutes and send .... this script is started at reboot 
+0 * * * * XDG_RUNTIME_DIR=/run/user/$(id -u)  python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/measure_send_params.py >> /home/pi/Desktop/HiveMonitor2/logs/param>
+
+# This is the most updated one we use. At reboot, it waits for 60s, then captures all data(total is 3 minutes)
+@reboot sleep 60 && XDG_RUNTIME_DIR=/run/user/$(id -u) && python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/capture_parameters.py >> /home/pi/Desktop/HiveMonitor2/logs/parameters.log 2>&1
 #<--end of crons
+
+
+
+
