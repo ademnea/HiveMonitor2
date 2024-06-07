@@ -58,9 +58,13 @@ Follow these steps to set up the environment:
 
 8. Go to `config.py` and set the correct node ID.
 
-9. Also add attribute pi_version and give it "2w", "0" depending on the version
+9. **Setting up the Microphone (I2S MEMS Microphone Breakout - SPH0645LM4H):**
 
-10. Configure the weight sensor by following the tutorial at [this link](https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/).
+    Follow the tutorial at [this link](https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/raspberry-pi-wiring-test) to set up the microphone.
+
+10. Also add attribute pi_version and give it "2w", "0" depending on the version
+
+11. Configure the weight sensor by following the tutorial at [this link](https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/).
 
 ## 11. Setting Up Time Synchronization
 
