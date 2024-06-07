@@ -7,7 +7,7 @@
 
 from datetime import datetime
 
-
+pi_version = "2w"
 node_id = 2
 username = "agatha"
 password = "agatha"

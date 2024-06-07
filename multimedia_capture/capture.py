@@ -174,7 +174,7 @@ class Capture:
         try:
             print("CAPTURING VIDEO")
             print()
-            video_path = self.capture_video_with_audio()
+            video_path = self.capture_video()
             print("New video taken at:", video_path)
             print()
         except Exception as e:

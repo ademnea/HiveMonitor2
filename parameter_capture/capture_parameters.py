@@ -62,8 +62,14 @@ class ParameterCapture:
     # Initialize the class with necessary configurations
     def __init__(self):
         self.HIVEID = str(node_id)
-        self.filename = f"/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data/{self.HIVEID}.csv"
+        self.sensor_data_dir = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data"
+        self.logs_dir = "/home/pi/Desktop/HiveMonitor2/logs"
+        self.filename = f"{self.sensor_data_dir}/{self.HIVEID}.csv"
         self.EMPTY_HIVE_WEIGHT = 10
+
+        # Ensure sensor_data directory exists
+        os.makedirs(self.sensor_data_dir, exist_ok=True)
+        os.makedirs(self.logs_dir, exist_ok=True)
 
         # Initialize DHT11 sensors
         self.honey_dht22 = adafruit_dht.DHT22(board.D5)
@@ -77,7 +83,7 @@ class ParameterCapture:
         self.hx.set_reading_format("MSB", "MSB")
         self.hx.set_reference_unit(self.referenceUnit)
         self.hx.reset()
-        self.hx.tare() 
+        self.hx.tare()
        
 
     # Clean up and exit the program
