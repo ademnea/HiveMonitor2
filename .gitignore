@@ -6,9 +6,10 @@ multimedia_capture/send_files_to_server.py
 parameter_capture/measure_send_params.py
 
 multimedia_capture/config.py
+*.log
+*.csv
 sensor_data/
 logs/
-
 parameter_capture/vibration_sensor/csv/
 parameter_capture/vibration_sensor/fft_log/
 parameter_capture/vibration_sensor/text_file/

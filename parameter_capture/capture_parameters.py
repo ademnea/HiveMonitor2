@@ -62,22 +62,28 @@ class ParameterCapture:
     # Initialize the class with necessary configurations
     def __init__(self):
         self.HIVEID = str(node_id)
-        self.filename = f"/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data/{self.HIVEID}.csv"
+        self.sensor_data_dir = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data"
+        self.logs_dir = "/home/pi/Desktop/HiveMonitor2/logs"
+        self.filename = f"{self.sensor_data_dir}/{self.HIVEID}.csv"
         self.EMPTY_HIVE_WEIGHT = 10
 
+        # Ensure sensor_data directory exists
+        os.makedirs(self.sensor_data_dir, exist_ok=True)
+        os.makedirs(self.logs_dir, exist_ok=True)
+
         # Initialize DHT11 sensors
-        self.honey_dht11 = adafruit_dht.DHT11(board.D21)
-        self.brood_dht11 = adafruit_dht.DHT11(board.D5)
-        self.climate_dht11 = adafruit_dht.DHT11(board.D6)
+        self.honey_dht22 = adafruit_dht.DHT22(board.D5)
+        self.brood_dht22 = adafruit_dht.DHT22(board.D21)
+        self.climate_dht22 = adafruit_dht.DHT22(board.D6)
 
         # Initialize weight module
         self.EMULATE_HX711 = False
-        self.referenceUnit = -52.14
+        self.referenceUnit = 23.055
         self.hx = HX711(0, 1)
         self.hx.set_reading_format("MSB", "MSB")
         self.hx.set_reference_unit(self.referenceUnit)
         self.hx.reset()
-        self.hx.tare() 
+        self.hx.tare()
        
 
     # Clean up and exit the program
@@ -97,7 +103,7 @@ class ParameterCapture:
                 weight = val / 1000
                 weight_list.append(weight)
             averaged_weight = (sum(weight_list) / average_times)
-            weight = round(averaged_weight, 0)
+            weight = round(averaged_weight, 2) 
             self.hx.power_down()
             self.hx.power_up()
 
@@ -206,21 +212,20 @@ class ParameterCapture:
         print("Weight:", weight, "kg")
         print()
 
-        # Measure temperature and humidity for different sections
-        temperature_honey, humidity_honey = self.measure_temperature_humidity(self.honey_dht11)
-        temperature_brood, humidity_brood = self.measure_temperature_humidity(self.brood_dht11)
-        temperature_exterior, humidity_exterior = self.measure_temperature_humidity(self.climate_dht11)
+        # # Measure temperature and humidity for different sections
+        temperature_honey, humidity_honey = self.measure_temperature_humidity(self.honey_dht22)
+        temperature_brood, humidity_brood = self.measure_temperature_humidity(self.brood_dht22)
+        temperature_exterior, humidity_exterior = self.measure_temperature_humidity(self.climate_dht22)
         print("Temperature Honey:", temperature_honey, "C Humidity Honey:", humidity_honey, "%")
         print("Temperature Brood:", temperature_brood, "C Humidity Brood:", humidity_brood, "%")
         print("Temperature Exterior:", temperature_exterior, "C Humidity Exterior:", humidity_exterior, "%")
         print()
 
-        # Write data to CSV
+        # # Write data to CSV
         print("WRITING DATA TO CSV")
         temperature = "{}*{}*{}".format(temperature_honey, temperature_brood, temperature_exterior)
         humidity = "{}*{}*{}".format(humidity_honey, humidity_brood, humidity_exterior)
         carbondioxide = co2
-        weight = str(weight)
         date1 = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = [date1, temperature, humidity, carbondioxide, weight]
         self.write_data_to_csv(data)
@@ -228,7 +233,7 @@ class ParameterCapture:
         print("CSV File created at:", csv_filepath)
 
         # Collecting vibration data
-        subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/vibration.py'])
+        # subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/vibration.py'])
 
         # Send captured files to server
         subprocess.run(['/bin/python', '/home/pi/Desktop/HiveMonitor2/multimedia_capture/send_files_to_server.py'])
