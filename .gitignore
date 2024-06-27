@@ -13,3 +13,4 @@ logs/
 parameter_capture/vibration_sensor/csv/
 parameter_capture/vibration_sensor/fft_log/
 parameter_capture/vibration_sensor/text_file/
+hx711py/
