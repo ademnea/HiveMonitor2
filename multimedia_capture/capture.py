@@ -69,14 +69,16 @@ class Capture:
             # print(image_result.stdout.decode("utf-8")) # Print the output as camera takes photo(if any)
             print(image_result.stderr.decode("utf-8"))   # Print the errors (if any)
 
-        # Open the image file
+        self.change_format(img_path)
+        return img_path
+    
+    def capture_rotated_photo(self, angle):
+        img_path = self.capture_photo()
         img = Image.open(img_path)
-        # Rotate the image by 90 degrees counterclockwise
-        img = img.rotate(90)
+        # Rotate the image by the specified angle
+        img = img.rotate(angle)
         # Save the rotated image back to the file
         img.save(img_path)
-
-        self.change_format(img_path)
         return img_path
 
     def capture_video(self, capture_duration=10):
@@ -92,7 +94,12 @@ class Capture:
             print(video_result.stderr.decode("utf-8"))   # Print the errors (if any)
         print(vid_path)
 
-       # Rotate the video by 90 degrees counterclockwise
+        self.change_format(vid_path)
+        vid_path = self.video_dir + str(config.node_id) + '_' + config.timeString + '.mp4'
+        return vid_path
+    
+    def capture_rotated_video(self, vid_path):
+        # Rotate the video by 90 degrees counterclockwise
         rotated_vid_path = self.video_dir + str(config.node_id) + '_' + config.timeString + "_rotated.h264"
         cmd = ["ffmpeg", "-i", vid_path, "-vf", "transpose=2", "-c:a", "copy", rotated_vid_path]
         subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
