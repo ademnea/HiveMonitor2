@@ -21,7 +21,7 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 print()
 print()
 try:
-    ssh.connect(hostname='', username='', password='')
+    ssh.connect(hostname='137.63.185.94', username='hivemonitor', password='Ad@mnea321')
     print('Connected to server successfully')
 except Exception as e:
     print(f'Failed to connect to server: {str(e)}. Will try again later')

@@ -10,6 +10,15 @@
 
 # This is the most updated one we use. At reboot, it waits for 60s, then captures all data(total is 3 minutes)
 @reboot sleep 60 && XDG_RUNTIME_DIR=/run/user/$(id -u) && python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/capture_parameters.py >> /home/pi/Desktop/HiveMonitor2/logs/parameters.log 2>&1
+
+#this one runs every one hour
+#0 * * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) && python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/capture_parameters.py >> /home/pi/Desktop/HiveMonitor2/logs/parameters.log 2>&1
+
+#this one works every 15minutes 
+*/15 * * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) && python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/capture_parameters.py >> /home/pi/Desktop/HiveMonitor2/logs/parameters.log 2>&1
+#this one runs every 6 hours 
+0 */6 * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) && python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/capture_parameters.py >> /home/pi/Desktop/HiveMonitor2/logs/parameters.log 2>&1
+#* */6* * * *  XDG_RUNTIME_DIR=/run/user/$(id -u) && python3 /home/pi/Desktop/HiveMonitor2/parameter_capture/capture_parameters.py >> /home/pi/Desktop/HiveMonitor2/logs/parameters.log 2>&1
 #<--end of crons
 
 

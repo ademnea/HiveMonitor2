@@ -247,12 +247,16 @@ class HX711:
 
 
     def get_weight_A(self, times=3):
+        print(f"Ref_unit: {self.REFERENCE_UNIT}") #debugging code
         value = self.get_value_A(times)
+        print(f"Raw value A: {value}")  #debugging line
         value = value / self.REFERENCE_UNIT
         return value
 
     def get_weight_B(self, times=3):
+        print(f"Ref_unit_B: {self.REFERENCE_UNIT_B}") #Debugging line
         value = self.get_value_B(times)
+        print(f"Raw Value B: {value}") #debugging line
         value = value / self.REFERENCE_UNIT_B
         return value
 

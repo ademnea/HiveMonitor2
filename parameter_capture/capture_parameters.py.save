@@ -65,7 +65,7 @@ class ParameterCapture:
         self.sensor_data_dir = "/home/pi/Desktop/HiveMonitor2/parameter_capture/sensor_data"
         self.logs_dir = "/home/pi/Desktop/HiveMonitor2/logs"
         self.filename = f"{self.sensor_data_dir}/{self.HIVEID}.csv"
-        self.EMPTY_HIVE_WEIGHT = 10
+        self.EMPTY_HIVE_WEIGHT = 1
 
         # Ensure sensor_data directory exists
         os.makedirs(self.sensor_data_dir, exist_ok=True)
@@ -78,7 +78,7 @@ class ParameterCapture:
 
         # Initialize weight module
         self.EMULATE_HX711 = False
-        self.referenceUnit = -10.8
+        self.referenceUnit = 23.055
         self.hx = HX711(0, 1)
         self.hx.set_reading_format("MSB", "MSB")
         self.hx.set_reference_unit(self.referenceUnit)
@@ -115,7 +115,6 @@ class ParameterCapture:
             print("ERROR WITH WEIGHT SENSOR! .......weight = 2kg ")
 
         return weight
-
     # Measure temperature and humidity using DHT11 sensor
     def measure_temperature_humidity(self, sensor):
         try:

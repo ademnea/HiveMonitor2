@@ -40,13 +40,13 @@ def create_config(editing):
                 print(f" Default : {values[index]} ")
                 value = str(
                     input("Enter value (or press enter to keep default): "))
-
+composer dump-autoloadcomposer dump-autoload
             value = value.replace("\"", "\\\"")
             if value:
                 config_dict[configuration] = value
             else:
 
-                config_dict[configuration] = values[index]
+                config_dict[configuraticomposer dump-autoloadon] = values[index]
 
         else:
             value = input(f"Enter value: ")
@@ -83,7 +83,7 @@ def load_config():
         for line in f:
             if (not line) or line.find("#") != -1 or line.find("=") == -1:  # skip comments
                 continue
-            name, value = line.split('=')
+            name,composer dump-autoload value = line.split('=')
             name = name.strip()
             value = value.strip().strip("\"")
             values[configurations.index(name)] = value
