@@ -146,18 +146,10 @@ def mainprog():
         channel_3.append(z)
     	
         sample_counter = sample_counter + 1;
-    #end of while loop
     
     print("Amount of samples in channel 1: %s" %len(channel_1))
     print("Amount of samples in channel 2: %s" %len(channel_2))
     print("Amount of samples in channel 3: %s" %len(channel_3))
-    
-    # #####saving to TXT file#####
-    # archive = "text_file_"
-    # archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
-    # archive += ".txt"
-    # print("Saving to %s" %archive)
-    # record(channel_1, channel_2, channel_3, archive)
     
     #####Calculate average value for each channel#####
     num_data = len(channel_1)
@@ -187,21 +179,6 @@ def mainprog():
         channel_2[indice] -= vdc_channel_2
         channel_3[indice] -= vdc_channel_3
     
-    # #####saving to CSV file#####
-    # archive = "time_logfile_"
-    # archive += datetime.datetime.now().strftime("%d-%m-%Y__%H_%M_%S")
-    # archive += ".csv"
-    # print("Saving to %s" %archive)
-    # arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/csv/"+archive, "w")
-    # num_data = len(channel_1)
-    # indice = 0;
-    # while (indice < num_data):
-    #     arch.write(str(channel_1[indice])+","+str(channel_2[indice])+","+str(channel_3[indice])+"\n")
-    #     indice = indice+1;
-
-    # arch.close()
-    # tname = archive
-    # print("Saving complete")
     
     #####calculation of fft#####
     
@@ -223,15 +200,19 @@ def mainprog():
     channel_fft_z = 2.0/N * np.abs(yf3[:int(N/2)])
     
     #####saving to CSV file#####
+    # Adding headers to the CSV file and writing the data
     archive = "vibration_"+str(node_id)+ "_" + str(timeString)+".csv"
     print("Saving to %s" %archive)
     arch = open("/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/fft_log/"+archive, "w")
+    arch.write("Time,Amplitude_X,Amplitude_Y,Amplitude_Z,Frequency_X,Frequency_Y,Frequency_Z,FFT_Amplitude_X,FFT_Amplitude_Y,FFT_Amplitude_Z\n")
     num_data = len(xf)
-    indice = 0;
+    indice = 0
+
+    # Write data to the CSV file
     while (indice < num_data):
-        arch.write(str(xf[indice])+","+str(channel_fft_x[indice])+","+str(channel_fft_y[indice])+","+str(channel_fft_z[indice])+"\n")
-        indice = indice+1;
-       
+        arch.write(f"{indice/sample_rate},{channel_1[indice]},{channel_2[indice]},{channel_3[indice]},{xf[indice]},{xf[indice]},{xf[indice]},{channel_fft_x[indice]},{channel_fft_y[indice]},{channel_fft_z[indice]}\n")
+        indice = indice + 1
+
     arch.close()
     fname = archive
     print("Saving complete")
