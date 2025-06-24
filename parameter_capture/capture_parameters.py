@@ -208,6 +208,7 @@ class ParameterCapture:
             gas = 2
             print("ERROR WITH GAS SENSOR:", e)
             print("Gas: 2 ohm")
+            print("Try installing package: sudo pip3 install adafruit-circuitpython-bme680")
             
         return gas
 
