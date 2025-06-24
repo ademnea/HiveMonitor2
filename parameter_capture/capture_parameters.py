@@ -8,6 +8,7 @@ import datetime
 import subprocess
 import numpy as np
 import adafruit_dht
+import adafruit_bme680
 import RPi.GPIO as GPIO
 from scipy import fftpack
 from sensirion_i2c_scd import Scd4xI2cDevice
@@ -159,6 +160,7 @@ class ParameterCapture:
         return co2
 
     #####functions#####
+    @staticmethod
     def conv_str_tag(channel, tag):
         # Convert every channel from int to str, separated by a coma and adds tags at the beginning and end.
         n = len(channel)
@@ -169,11 +171,12 @@ class ParameterCapture:
         return s_channel
 
     #####Add tags and save on file#####
+    @staticmethod
     def record(channel_1, channel_2, channel_3, archive):
         str_channel = ''
-        str_channel += conv_str_tag(channel_1, 'L1') + '\n'
-        str_channel += conv_str_tag(channel_2, 'L2') + '\n'
-        str_channel += conv_str_tag(channel_3, 'L3') + '\n'
+        str_channel += ParameterCapture.conv_str_tag(channel_1, 'L1') + '\n'
+        str_channel += ParameterCapture.conv_str_tag(channel_2, 'L2') + '\n'
+        str_channel += ParameterCapture.conv_str_tag(channel_3, 'L3') + '\n'
 
         # Write to file
         arch = open("/home/pi/Desktop/HiveMonitor2/VIBRATIONSENSOR/textfile/"+archive, "w")
@@ -190,6 +193,23 @@ class ParameterCapture:
             with open(self.filename, 'a') as f:
                 writer = csv.writer(f)
                 writer.writerow(data)
+
+    # Capture gas readings from BME680 sensor
+    def capture_gas(self):
+        try:
+            # Create sensor object, communicating over the board's default I2C bus
+            i2c = board.I2C()   # uses board.SCL and board.SDA
+            bme680 = adafruit_bme680.Adafruit_BME680_I2C(i2c, address=0x76)
+            
+            # Get gas reading
+            gas = bme680.gas
+            print("Gas:", gas, "ohm")
+        except Exception as e:
+            gas = 2
+            print("ERROR WITH GAS SENSOR:", e)
+            print("Gas: 2 ohm")
+            
+        return gas
 
     # Run the data capture process
     def run_capture(self):
@@ -221,13 +241,17 @@ class ParameterCapture:
         print("Temperature Exterior:", temperature_exterior, "C Humidity Exterior:", humidity_exterior, "%")
         print()
 
+        # Capture gas readings from BME680 sensor
+        gas = self.capture_gas()
+        print()
+
         # # Write data to CSV
         print("WRITING DATA TO CSV")
         temperature = "{}*{}*{}".format(temperature_honey, temperature_brood, temperature_exterior)
         humidity = "{}*{}*{}".format(humidity_honey, humidity_brood, humidity_exterior)
         carbondioxide = co2
         date1 = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        data = [date1, temperature, humidity, carbondioxide, weight]
+        data = [date1, temperature, humidity, carbondioxide, weight, gas]
         self.write_data_to_csv(data)
         csv_filepath = os.path.realpath(self.filename)
         print("CSV File created at:", csv_filepath)
