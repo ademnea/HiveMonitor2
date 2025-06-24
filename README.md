@@ -19,7 +19,7 @@ Follow these steps to set up the environment:
 1. Install the necessary Python packages:
 
     ```bash
-    sudo pip3 install adafruit-circuitpython-dht paramiko sounddevice soundfile scipy sensirion_i2c_scd
+    sudo pip3 install adafruit-circuitpython-dht paramiko sounddevice soundfile scipy sensirion_i2c_scd adafruit-circuitpython-bme680
     ```
 
 2. Install the necessary system packages:
