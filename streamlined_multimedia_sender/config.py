@@ -111,7 +111,7 @@ def load_config() -> Config:
     """
 
     server = ServerConfig(
-        host=_get_env("SERVER_HOST", "REMOVED"),
+        host=_get_env("SERVER_HOST", ""),
         port=int(_get_env("SERVER_SSH_PORT", "22")),
         username=_get_env("SERVER_USER", "ephrince"),
         password=_get_env("SERVER_PASSWORD", "Ephrance@2026"),
@@ -149,7 +149,7 @@ def load_config() -> Config:
         threshold_wifi=float(_get_env("THRESHOLD_WIFI", "0.60")),
         threshold_gsm=float(_get_env("THRESHOLD_GSM", "0.50")),
         hysteresis_delta=float(_get_env("HYSTERESIS_DELTA", "0.10")),
-        ping_server=_get_env("PING_SERVER", "REMOVED"),
+        ping_server=_get_env("PING_SERVER",),
     )
 
     logging_config = LoggingConfig(

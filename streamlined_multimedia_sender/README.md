@@ -99,7 +99,7 @@ All configuration is managed through environment variables defined in `.env`:
 
 #### Server Configuration
 ```bash
-SERVER_HOST=REMOVED          # SFTP server hostname/IP
+SERVER_HOST=      # SFTP server hostname/IP
 SERVER_SSH_PORT=22                 # SSH port
 SERVER_USER=ephrince               # SSH username  
 SERVER_PASSWORD=Ephrance@2026      # SSH password
@@ -120,7 +120,7 @@ VIBRATION_DIR=/home/pi/Desktop/HiveMonitor2/parameter_capture/vibration_sensor/f
 THRESHOLD_WIFI=0.60               # WiFi selection threshold (0-1)
 THRESHOLD_GSM=0.50                # GSM selection threshold (0-1)  
 HYSTERESIS_DELTA=0.10             # Prevents interface thrashing
-PING_SERVER=REMOVED         # Server for connectivity testing
+PING_SERVER=      # Server for connectivity testing
 ```
 
 #### Device Configuration
@@ -256,7 +256,7 @@ LoRa module connects via USB or USB-to-serial adapter on `/dev/ttyUSB0`.
 
 3. **WiFi Problems**:
     - Check interface status: `ip addr show wlan0`
-    - Test connectivity: `ping -c 4 REMOVED`
+    - Test connectivity: `ping -c 4
     - Verify NetworkManager: `systemctl status NetworkManager`
 
 4. **LoRa Communication**:
