@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# GSM PPP Setup Script for Streamlined Multimedia Sender
+# This script configures PPP for GSM connectivity
+
+echo "Setting up GSM PPP configuration..."
+
+# Create PPP peers directory if it doesn't exist
+sudo mkdir -p /etc/ppp/peers
+
+# Create the mobile PPP configuration
+sudo tee /etc/ppp/peers/mobile > /dev/null << 'EOF'
+# GSM PPP Configuration for mobile connection
+connect "/usr/sbin/chat -v -f /etc/ppp/chatscripts/mobile"
+/dev/serial0
+9600
+crtscts
+debug
+nodetach
+ipcp-accept-local
+ipcp-accept-remote
+local
+usepeerdns
+defaultroute
+persist
+noauth
+EOF
+
+# Create chatscripts directory if it doesn't exist
+sudo mkdir -p /etc/ppp/chatscripts
+
+# Create the mobile chatscript
+sudo tee /etc/ppp/chatscripts/mobile > /dev/null << 'EOF'
+TIMEOUT 10
+ECHO ON
+ABORT '\nBUSY\r'
+ABORT '\nERROR\r'  
+ABORT '\nNO ANSWER\r'
+ABORT '\nNO CARRIER\r'
+ABORT '\nNO DIALTONE\r'
+ABORT '\nRINGING\r\n\r\nRINGING\r'
+'' AT
+'OK-+++\c-OK' ATH0
+TIMEOUT 30
+OK ATDT*99#
+TIMEOUT 30
+CONNECT ""
+EOF
+
+# Set proper permissions
+sudo chmod 600 /etc/ppp/peers/mobile
+sudo chmod 600 /etc/ppp/chatscripts/mobile
+
+echo "PPP configuration created successfully!"
+echo ""
+echo "To test the connection, run:"
+echo "  sudo pon mobile"
+echo ""
+echo "To disconnect, run:"  
+echo "  sudo poff mobile"
+echo ""
+echo "To check connection status:"
+echo "  ifconfig ppp0"
