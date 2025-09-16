@@ -12,9 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 class WiFi:
-    def __init__(self, iface: str) -> None:
+    def __init__(self, iface: str, command_timeout: int = 3, activation_delay: float = 1.0) -> None:
         self.iface = iface
-        logger.debug(f"WiFi adapter initialized for interface: {iface}")
+        self.command_timeout = command_timeout
+        self.activation_delay = activation_delay
+        logger.debug(f"WiFi interface initialized: {iface}")
 
     def measure(self, server_host: str, server_port: int, ping_host_target: str | None = None) -> Dict[str, float]:
         logger.debug(f"Starting WiFi measurements for {self.iface}")
@@ -45,26 +47,26 @@ class WiFi:
         
         try:
             logger.debug("Unblocking WiFi via rfkill")
-            subprocess.run(["rfkill", "unblock", "wifi"], check=False, timeout=3)
+            subprocess.run(["rfkill", "unblock", "wifi"], check=False, timeout=self.command_timeout)
         except Exception as e:
             logger.warning(f"Failed to unblock WiFi: {e}")
             
         try:
             logger.debug(f"Reconfiguring WiFi interface {self.iface}")
-            subprocess.run(["wpa_cli", "-i", self.iface, "reconfigure"], check=False, timeout=3)
+            subprocess.run(["wpa_cli", "-i", self.iface, "reconfigure"], check=False, timeout=self.command_timeout)
         except Exception as e:
             logger.warning(f"Failed to reconfigure WiFi: {e}")
             
         # Give DHCP a moment
-        logger.debug("Waiting 1 second for DHCP")
-        time.sleep(1.0)
+        logger.debug(f"Waiting {self.activation_delay} seconds for DHCP")
+        time.sleep(self.activation_delay)
         logger.info("WiFi activation completed")
 
     def deactivate(self) -> None:
         logger.info("Deactivating WiFi interface")
         try:
             logger.debug("Blocking WiFi via rfkill")
-            subprocess.run(["rfkill", "block", "wifi"], check=False, timeout=3)
+            subprocess.run(["rfkill", "block", "wifi"], check=False, timeout=self.command_timeout)
             logger.info("WiFi deactivation completed")
         except Exception as e:
             logger.warning(f"Failed to block WiFi: {e}")

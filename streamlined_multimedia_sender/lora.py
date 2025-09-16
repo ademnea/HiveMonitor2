@@ -19,9 +19,19 @@ logger = logging.getLogger(__name__)
 
 
 class LoRa:
-    def __init__(self, port: str, baud: int) -> None:
+    def __init__(self, port: str, baud: int, serial_timeout: int = 10, command_timeout: float = 15.0,
+                 mock_rssi: int = 80, mock_snr: int = 12, mock_temperature: float = 23.5,
+                 max_send_attempts: int = 3, retry_delay: float = 3.0, inter_chunk_delay: float = 0.5) -> None:
         self.port = port
         self.baud = baud
+        self.serial_timeout = serial_timeout
+        self.command_timeout = command_timeout
+        self.mock_rssi = mock_rssi
+        self.mock_snr = mock_snr
+        self.mock_temperature = mock_temperature
+        self.max_send_attempts = max_send_attempts
+        self.retry_delay = retry_delay
+        self.inter_chunk_delay = inter_chunk_delay
         logger.debug(f"LoRa adapter initialized: port={port}, baud={baud}")
 
     def measure(self) -> Dict[str, float]:
@@ -60,7 +70,7 @@ class LoRa:
             return {"status": "failed", "error": "PySerial not available"}
         
         try:
-            ser = serial.Serial(self.port, self.baud, timeout=10)
+            ser = serial.Serial(self.port, self.baud, timeout=self.serial_timeout)
             logger.debug(f"LoRa serial port opened: {self.port}")
         except Exception as e:
             logger.error(f"Failed to open LoRa serial port: {e}")
@@ -70,9 +80,9 @@ class LoRa:
             with ser:
                 # Create the compact status payload for fPort 2
                 
-                # Mock values (these should be replaced with actual measurements in a real implementation)
-                rssi_value = 80  # 80 dBm (will be converted to negative in the decoder)
-                snr_value = 12  # 1.2 dBm (will be divided by 10 in the decoder)
+                # Use configured mock values (these should be replaced with actual measurements in a real implementation)
+                rssi_value = self.mock_rssi  # dBm (will be converted to negative in the decoder)
+                snr_value = self.mock_snr    # SNR * 10 (will be divided by 10 in the decoder)
                 
                 # Flags byte
                 flags = 0x00
@@ -87,8 +97,8 @@ class LoRa:
                 if summary_files:
                     flags |= 0x08  # filesystem_ok flag
                     
-                # Mock temperature (23.5°C)
-                temp_value = int(23.5 * 10)  # Scale by 10 for fixed-point representation
+                # Use configured mock temperature
+                temp_value = int(self.mock_temperature * 10)  # Scale by 10 for fixed-point representation
                 
                 # Count of summary files as pending files count
                 pending_files = len(summary_files)
@@ -108,9 +118,9 @@ class LoRa:
                 # Send on fPort 2 for status data
                 cmd = f"AT+SENDB=2,1,{len(payload)},{hex_payload}"
                 
-                # Try up to 3 times
-                for attempt in range(3):
-                    resp = self._send_command(ser, cmd, timeout=15.0)
+                # Try up to configured max attempts
+                for attempt in range(self.max_send_attempts):
+                    resp = self._send_command(ser, cmd, timeout=self.command_timeout)
                     if ("OK" in resp) or ("+ACK" in resp):
                         logger.info(f"Summary status data sent successfully on fPort 2 (attempt {attempt+1})")
                         
@@ -130,7 +140,7 @@ class LoRa:
                         }
                     
                     logger.warning(f"Failed to send status data on attempt {attempt+1}, retrying...")
-                    time.sleep(3.0)
+                    time.sleep(self.retry_delay)
                 
                 logger.error(f"Failed to send summary status data after 3 attempts")
                 return {"status": "failed", "error": "Failed after 3 attempts"}
@@ -153,7 +163,7 @@ class LoRa:
                     buf.append(line)
                     if "OK" in line or "ERROR" in line:
                         break
-            time.sleep(0.5)
+            time.sleep(self.inter_chunk_delay)
         return "\n".join(buf)
 
     def send_text_files(self, dir_path: str, archive_dir: Optional[str] = None, fport: int = 1, max_payload: int = 40) -> List[Dict[str, Any]]:
@@ -211,20 +221,20 @@ class LoRa:
                         payload = bytes([seq % 256]) + chunk
                         hex_payload = binascii.hexlify(payload).decode().upper()
                         cmd = f"AT+SENDB={fport},1,{len(payload)},{hex_payload}"
-                        # Try up to 3 times per chunk
+                        # Try up to configured max attempts per chunk
                         sent = False
-                        for _ in range(3):
+                        for _ in range(self.max_send_attempts):
                             attempts += 1
-                            resp = self._send_command(ser, cmd, timeout=15.0)
+                            resp = self._send_command(ser, cmd, timeout=self.command_timeout)
                             if ("OK" in resp) or ("+ACK" in resp):
                                 sent = True
                                 break
-                            time.sleep(3.0)
+                            time.sleep(self.retry_delay)
                         if not sent:
                             raise RuntimeError(f"chunk {seq+1}/{total_chunks} failed")
                         bytes_sent += len(chunk)
                         if seq < total_chunks - 1:
-                            time.sleep(4.0)
+                            time.sleep(self.inter_chunk_delay * 8)  # Longer delay between chunks
                     
                     # Calculate send period and throughput
                     send_period = time.time() - start_time

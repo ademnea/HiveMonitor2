@@ -20,13 +20,16 @@ logger = logging.getLogger(__name__)
 
 
 class GSM:
-    def __init__(self, port: str, baud: int, ppp_profile: str) -> None:
+    def __init__(self, port: str, baud: int, ppp_profile: str, 
+                 query_read_delay: float = 0.15, query_timeout: float = 2.0) -> None:
         self.port = port
         self.baud = baud
         self.ppp_profile = ppp_profile
+        self.query_read_delay = query_read_delay
+        self.query_timeout = query_timeout
         logger.debug(f"GSM adapter initialized: port={port}, baud={baud}, ppp_profile={ppp_profile}")
 
-    def _query(self, at: str, read_delay_sec: float = 0.15, timeout_sec: float = 2.0) -> str:
+    def _query(self, at: str, read_delay_sec: float = None, timeout_sec: float = None) -> str:
         """Send an AT command and return raw response string; safe failures return empty string."""
         logger.debug(f"GSM AT command: {at.strip()}")
         
@@ -34,6 +37,12 @@ class GSM:
             logger.warning("PySerial not available - GSM query failed")
             return ""
         
+        # Use instance defaults if not provided
+        if read_delay_sec is None:
+            read_delay_sec = self.query_read_delay
+        if timeout_sec is None:
+            timeout_sec = self.query_timeout
+            
         try:
             with serial.Serial(self.port, self.baud, timeout=timeout_sec) as ser:
                 ser.reset_input_buffer()

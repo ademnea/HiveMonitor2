@@ -35,14 +35,18 @@ class UnifiedSender:
     behavior if Paramiko is not available.
     """
 
-    def __init__(self, host: str, port: int, username: str, password: str, dest_path: str) -> None:
+    def __init__(self, host: str, port: int, username: str, password: str, dest_path: str, 
+                 max_retries: int = 3, base_delay: float = 1.0, 
+                 connection_timeout: int = 30, auth_timeout: int = 15) -> None:
         self.host = host
         self.port = port
         self.username = username
         self.password = password
         self.dest_path = dest_path.rstrip('/')  # Normalize path
-        self.max_retries = 3
-        self.base_delay = 1.0  # Base delay for exponential backoff
+        self.max_retries = max_retries
+        self.base_delay = base_delay
+        self.connection_timeout = connection_timeout
+        self.auth_timeout = auth_timeout
         logger.debug(f"UnifiedSender initialized: {host}:{port}, dest_path={dest_path}")
         
         if not PARAMIKO_AVAILABLE:
@@ -107,8 +111,8 @@ class UnifiedSender:
                 port=self.port,
                 username=self.username,
                 password=self.password,
-                timeout=30,  # 30 second connection timeout
-                auth_timeout=15,  # 15 second auth timeout
+                timeout=self.connection_timeout,
+                auth_timeout=self.auth_timeout,
             )
             
             sftp_client = ssh_client.open_sftp()

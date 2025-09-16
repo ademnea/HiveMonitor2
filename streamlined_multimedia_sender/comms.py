@@ -46,9 +46,30 @@ class Comms:
         self.scores: Dict[str, float] = {}
         self.run_started_at: datetime = datetime.utcnow()
         # Interface instances
-        self.wifi = WiFi(self.config.device.wifi_iface)
-        self.gsm = GSM(self.config.gsm.port, self.config.gsm.baud, self.config.device.ppp_profile)
-        self.lora = LoRa(self.config.lora.port, self.config.lora.baud)
+        self.wifi = WiFi(
+            self.config.device.wifi_iface,
+            command_timeout=self.config.network.wifi_command_timeout,
+            activation_delay=self.config.network.wifi_activation_delay
+        )
+        self.gsm = GSM(
+            self.config.gsm.port, 
+            self.config.gsm.baud, 
+            self.config.device.ppp_profile,
+            query_read_delay=self.config.gsm.query_read_delay,
+            query_timeout=self.config.gsm.query_timeout
+        )
+        self.lora = LoRa(
+            self.config.lora.port, 
+            self.config.lora.baud,
+            serial_timeout=self.config.network.lora_serial_timeout,
+            command_timeout=self.config.network.lora_command_timeout,
+            mock_rssi=self.config.lora.mock_rssi,
+            mock_snr=self.config.lora.mock_snr,
+            mock_temperature=self.config.lora.mock_temperature,
+            max_send_attempts=self.config.lora.max_send_attempts,
+            retry_delay=self.config.lora.retry_delay,
+            inter_chunk_delay=self.config.lora.inter_chunk_delay
+        )
         
         logger.info(f"Comms initialized for device {self.config.device.device_id}")
         logger.debug(f"Interface configuration: WiFi={self.config.device.wifi_iface}, GSM={self.config.gsm.port}, LoRa={self.config.lora.port}")
@@ -127,17 +148,17 @@ class Comms:
                    f"COPS={gsm_m.get('cops_norm', 0.0):.3f}, TCP={gsm_m.get('tcp_norm', 0.0):.3f}")
 
         wifi_score = (
-            0.35 * wifi_m.get("rssi_norm", 0.0)
-            + 0.25 * wifi_m.get("latency_norm", 0.0)
-            + 0.20 * wifi_m.get("loss_norm", 0.0)
-            + 0.20 * wifi_m.get("tcp_norm", 0.0)
+            self.config.selection.wifi_rssi_weight * wifi_m.get("rssi_norm", 0.0)
+            + self.config.selection.wifi_latency_weight * wifi_m.get("latency_norm", 0.0)
+            + self.config.selection.wifi_loss_weight * wifi_m.get("loss_norm", 0.0)
+            + self.config.selection.wifi_tcp_weight * wifi_m.get("tcp_norm", 0.0)
         )
 
         gsm_score = (
-            0.35 * gsm_m.get("csq_norm", 0.0)
-            + 0.25 * gsm_m.get("creg_norm", 0.0)
-            + 0.20 * gsm_m.get("cops_norm", 0.0)
-            + 0.20 * gsm_m.get("tcp_norm", 0.0)
+            self.config.selection.gsm_csq_weight * gsm_m.get("csq_norm", 0.0)
+            + self.config.selection.gsm_creg_weight * gsm_m.get("creg_norm", 0.0)
+            + self.config.selection.gsm_cops_weight * gsm_m.get("cops_norm", 0.0)
+            + self.config.selection.gsm_tcp_weight * gsm_m.get("tcp_norm", 0.0)
         )
 
         lora_score = 1.0  # Always set to 1.0 to bypass availability check
@@ -283,6 +304,10 @@ class Comms:
             username=self.config.server.username,
             password=self.config.server.password,
             dest_path=self.config.server.dest_path,
+            max_retries=self.config.network.max_retries,
+            base_delay=self.config.network.base_delay,
+            connection_timeout=self.config.network.ssh_connection_timeout,
+            auth_timeout=self.config.network.ssh_auth_timeout,
         )
         archive_root = Path(self.config.paths.archive_dir) / datetime.utcnow().strftime("%d_%m_%Y")
         self._last_send_results = sender.send_files(files, archive_dir=archive_root)  # type: ignore[attr-defined]
@@ -379,6 +404,10 @@ class Comms:
                 username=self.config.server.username,
                 password=self.config.server.password,
                 dest_path=f"{self.config.server.dest_path}/summary/{datetime.utcnow().strftime('%d_%m_%Y')}",
+                max_retries=self.config.network.max_retries,
+                base_delay=self.config.network.base_delay,
+                connection_timeout=self.config.network.ssh_connection_timeout,
+                auth_timeout=self.config.network.ssh_auth_timeout,
             )
             
             # Convert summary file paths to list
