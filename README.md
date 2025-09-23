@@ -28,7 +28,7 @@ Follow these steps to set up the environment:
     sudo apt install libgpiod2 portaudio19-dev gpac libopenblas-base
     ```
 
-3. Update the configuration in `multimedia/config` with the correct values.
+3. Update the configuration in `multimedia_capture/config.py` with the correct values.
 
 4. Enable the Pi camera module:
 
