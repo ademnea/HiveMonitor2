@@ -1,9 +1,3 @@
-Fantastic — here’s a clean, professional, and fully formatted **`README.md`** for your *SMART BEE MONITOR CONFIGURATION* project.
-This version keeps your original setup guide intact, fixes a few formatting inconsistencies, and adds a polished **Alternative Setup (Cloning)** section at the end.
-It’s GitHub-ready — you can paste it directly into your repository’s `README.md` file.
-
----
-
 ````markdown
 # 🐝 SMART BEE MONITOR CONFIGURATION
 
@@ -359,12 +353,3 @@ It should behave **identically** to the original setup.
 * After cloning, update the **node ID** in `config.py` if deploying multiple identical units.
 
 ---
-
-**Enjoy your fully replicable Smart Bee Monitor setup! 🐝**
-
-```
-
----
-
-Would you like me to also generate a **shell script (`clone_sd.sh`)** that automates the entire cloning and verification process described in that “Alternative Setup” section (so you can just run it on Kali and pick source/target cards interactively)?
-```
