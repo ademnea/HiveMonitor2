@@ -1,5 +1,5 @@
 ````markdown
-# 🐝 SMART BEE MONITOR CONFIGURATION
+# SMART BEE MONITOR RASPBERRY PI CONFIGURATION
 
 This repository contains two main directories:  
 `multimedia_capture` and `parameter_capture`.
@@ -9,7 +9,7 @@ This repository contains two main directories:
 
 ---
 
-## ⚙️ Setup for Parameter & Media Capture
+## Setup for Parameter & Media Capture
 
 Before installing the necessary Python packages, ensure you have the correct operating system installed on your Raspberry Pi:
 
@@ -20,14 +20,14 @@ Before installing the necessary Python packages, ensure you have the correct ope
 
 ---
 
-### 🧩 Step 1: Install Required Python Packages
+### Step 1: Install Required Python Packages
 ```bash
 sudo pip3 install adafruit-circuitpython-dht paramiko sounddevice soundfile scipy sensirion_i2c_scd adafruit-circuitpython-bme680
 ````
 
 ---
 
-### 🧰 Step 2: Install Required System Packages
+### Step 2: Install Required System Packages
 
 ```bash
 sudo apt install libgpiod2 portaudio19-dev gpac libopenblas-base
@@ -35,7 +35,7 @@ sudo apt install libgpiod2 portaudio19-dev gpac libopenblas-base
 
 ---
 
-### ⚙️ Step 3: Configure Multimedia Capture
+### Step 3: Configure Multimedia Capture
 
 Update the configuration in:
 
@@ -67,7 +67,7 @@ Reboot after making changes.
 
 ---
 
-### 🧠 Step 5: Activate the I²C Interface
+### Step 5: Activate the I²C Interface
 
 Run:
 
@@ -86,7 +86,7 @@ Reboot your Raspberry Pi to apply the changes.
 
 ---
 
-### ⏰ Step 6: Set Up Cron Jobs
+### Step 6: Set Up Cron Jobs
 
 Open the crontab:
 
@@ -106,7 +106,7 @@ and install them.
 
 ---
 
-### 🔑 Step 7: Configure Credentials
+### Step 7: Configure Credentials
 
 Insert the correct credentials in:
 
@@ -117,29 +117,29 @@ Then, in `config.py`, set the correct **node ID**.
 
 ---
 
-### 🎤 Step 8: Configure the Microphone (I2S MEMS Microphone Breakout - SPH0645LM4H)
+### Step 8: Configure the Microphone (I2S MEMS Microphone Breakout - SPH0645LM4H)
 
 Follow Adafruit’s tutorial to set up the microphone:
-[🔗 Adafruit I2S MEMS Microphone Tutorial](https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/raspberry-pi-wiring-test)
+[ Adafruit I2S MEMS Microphone Tutorial](https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/raspberry-pi-wiring-test)
 
 Also, add the `pi_version` attribute in your configuration —
 set it to `"2w"`, `"0"`, etc., depending on your model.
 
 ---
 
-### ⚖️ Step 9: Configure the Weight Sensor
+### Step 9: Configure the Weight Sensor
 
 Follow this tutorial to set up the HX711 weight sensor:
-[🔗 Digital Raspberry Pi Scale (HX711)](https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/)
+[ Digital Raspberry Pi Scale (HX711)](https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/)
 
 ---
 
-## 🕒 Step 10: Setting Up Time Synchronization
+## Step 10: Setting Up Time Synchronization
 
 Your Raspberry Pi will use the Real-Time Clock (RTC) to maintain time — make sure the RTC has a working battery.
 
 If the Pi still boots with the wrong time, follow this guide:
-[🔗 How to Add an RTC Module to Raspberry Pi](https://maker.pro/raspberry-pi/tutorial/how-to-add-an-rtc-module-to-raspberry-pi)
+[ How to Add an RTC Module to Raspberry Pi](https://maker.pro/raspberry-pi/tutorial/how-to-add-an-rtc-module-to-raspberry-pi)
 
 ---
 
@@ -234,14 +234,14 @@ sudo hwclock -w
 
 ---
 
-## ⚙️ Alternative Setup: Using an Existing Configured SD Card
+## Alternative Setup: Using an Existing Configured SD Card
 
 If you already have a working and fully configured Raspberry Pi SD card with the SMART BEE MONITOR setup, you can **clone it** and reuse the setup on other Raspberry Pis.
 This is faster and guarantees identical software environments across multiple devices.
 
 ---
 
-### 🧭 Step 1: Identify the Source SD Card
+### Step 1: Identify the Source SD Card
 
 Insert your **configured Raspberry Pi SD card** into your Linux computer and run:
 
@@ -253,7 +253,7 @@ Find the device name (e.g., `/dev/sda` or `/dev/sdb`), usually around **29–32 
 
 ---
 
-### ⚠️ Step 2: Unmount All Partitions
+### Step 2: Unmount All Partitions
 
 ```bash
 sudo umount /dev/sda*
@@ -261,7 +261,7 @@ sudo umount /dev/sda*
 
 ---
 
-### 🧩 Step 3: Create the Image
+### Step 3: Create the Image
 
 ```bash
 sudo dd if=/dev/sda of=smartbee_backup.img bs=4M status=progress conv=fsync
