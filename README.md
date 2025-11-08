@@ -47,7 +47,7 @@ with your correct server and device values.
 
 ---
 
-### 📷 Step 4: Enable the Pi Camera Module
+### Step 4: Enable the Pi Camera Module
 
 Run:
 
