@@ -143,20 +143,20 @@ If the Pi still boots with the wrong time, follow this guide:
 
 ---
 
-### 1️⃣ Update & Upgrade Packages
+### 1️ Update & Upgrade Packages
 
 ```bash
 sudo apt-get update -y
 sudo apt-get upgrade -y
 ```
 
-### 2️⃣ Install RTC Interface Packages
+### 2️ Install RTC Interface Packages
 
 ```bash
 sudo apt-get install python3-smbus i2c-tools
 ```
 
-### 3️⃣ Enable the RTC Module
+### 3️ Enable the RTC Module
 
 Edit the configuration:
 
@@ -184,7 +184,7 @@ dtoverlay=i2c-rtc,ds3231
 
 ---
 
-### 4️⃣ Remove the Fake Hardware Clock
+### 4️ Remove the Fake Hardware Clock
 
 ```bash
 sudo apt-get -y remove fake-hwclock
@@ -194,7 +194,7 @@ sudo systemctl disable fake-hwclock
 
 ---
 
-### 5️⃣ Edit the `hwclock-set` Script
+### 5️ Edit the `hwclock-set` Script
 
 Open:
 
@@ -226,7 +226,7 @@ fi
 
 ---
 
-### 6️⃣ Write System Time to the RTC
+### 6️ Write System Time to the RTC
 
 ```bash
 sudo hwclock -w
@@ -273,7 +273,7 @@ sudo sync
 
 ---
 
-### 📦 Step 4: (Optional) Compress the Image
+### Step 4: (Optional) Compress the Image
 
 ```bash
 gzip smartbee_backup.img
@@ -317,7 +317,7 @@ sudo sync
 
 ---
 
-### 🧾 Step 6: (Optional) Expand Filesystem on the New SD Card
+### Step 6: (Optional) Expand Filesystem on the New SD Card
 
 If the new SD card is larger than the original, expand the filesystem.
 
@@ -338,14 +338,14 @@ sudo resize2fs /dev/sdb2
 
 ---
 
-### ✅ Step 7: Test the Clone
+### Step 7: Test the Clone
 
 Insert the new SD card into your Raspberry Pi and boot it.
 It should behave **identically** to the original setup.
 
 ---
 
-### 📚 Notes
+### Notes
 
 * Always double-check device names (`/dev/sda`, `/dev/sdb`) before using `dd`.
 * Writing the wrong device will permanently erase its contents.
